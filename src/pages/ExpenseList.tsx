@@ -1,20 +1,19 @@
-import React, { useEffect, useState } from "react";
+import React, { lazy, useEffect, useState } from "react";
 import { Plus, Download, FileText } from "lucide-react";
 import { useExpenses } from "../hooks/useExpenses";
 import { Expense } from "../types";
-import ExpenseCard from "../components/Expense/ExpenseCard";
-import ExpenseFilters from "../components/Expense/ExpenseFilters";
-import AddExpense from "../components/Expense/AddExpense";
 import { formatCurrency } from "../utils/dateUtils";
+import ExpenseTable from "../components/Expense/ExpenseTable";
+
+const ExpenseFilters = lazy(() => import("../components/Expense/ExpenseFilters"));
+const AddExpense = lazy(() => import("../components/Expense/AddExpense"));
 
 const ExpenseList: React.FC = () => {
   const {
     expenses,
     getFilteredExpenses,
-    categories,
     filter,
     setFilter,
-    deleteExpense,
   } = useExpenses();
   const [editingExpense, setEditingExpense] = useState<Expense | null>(null);
   const [showAddForm, setShowAddForm] = useState(false);
@@ -28,11 +27,6 @@ const ExpenseList: React.FC = () => {
     (sum, expense) => sum + expense.amount,
     0
   );
-
-  const handleEdit = (expense: Expense) => {
-    setEditingExpense(expense);
-    setShowAddForm(true);
-  };
 
   const handleCloseForm = () => {
     setEditingExpense(null);
@@ -133,17 +127,7 @@ const ExpenseList: React.FC = () => {
           </button>
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {filteredExpenses.map((expense) => (
-            <ExpenseCard
-              key={expense.id}
-              expense={expense}
-              category={categories.find((c) => c.name === expense.category)}
-              onEdit={handleEdit}
-              onDelete={deleteExpense}
-            />
-          ))}
-        </div>
+          <ExpenseTable expenses={expenses} />
       )}
     </div>
   );

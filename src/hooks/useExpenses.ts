@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Expense, Category, ExpenseFilter, ExpenseStats } from "../types";
+import { Expense, Category, ExpenseFilter, ExpenseStats, Transaction } from "../types";
 import { storage } from "../utils/storage";
 import { GetTransactions } from "../dataAccess/transactionDAL";
 
@@ -15,8 +15,19 @@ export const useExpenses = () => {
       // const loadedExpenses = storage.getExpenses();
       const loadedCategories = storage.getCategories();
 
-      let Transactions = await GetTransactions();
+      let Transactions: Transaction[] = await GetTransactions();
       console.log(Transactions);
+      setExpenses(Transactions.map(x => {
+        return {
+          title: x.description ?? "", 
+          amount: x.amount,
+          category: String(x.categoryId),
+          date: x.transactionDate,
+          description: x.description ?? "",
+          createdAt: x.createdAt,
+          updatedAt: x.createdAt
+      } as Expense
+    }));
 
       // setExpenses(loadedExpenses);
       setCategories(loadedCategories);

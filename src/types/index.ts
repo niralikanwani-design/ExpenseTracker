@@ -1,5 +1,5 @@
 export interface Expense {
-  id: string;
+  id: string | null;
   title: string;
   amount: number;
   category: string;
@@ -7,6 +7,16 @@ export interface Expense {
   description?: string;
   createdAt: string;
   updatedAt: string;
+  type: string | null;
+}
+
+export interface Transaction {
+  categoryId: number;
+  amount: number;
+  type: string | null;
+  description: string | null;
+  transactionDate: string;
+  createdAt: string;
 }
 
 export interface Income {
