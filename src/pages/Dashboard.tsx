@@ -8,11 +8,17 @@ import {
 } from "lucide-react";
 import { useExpenses } from "../hooks/useExpenses";
 import { formatCurrency } from "../utils/dateUtils";
+import { useNavigate } from "react-router-dom";
+import useUserStore from "../store/useUserStore";
+import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer } from "recharts";
 
 const Dashboard: React.FC = () => {
+  const navigate = useNavigate();
   const { getExpenseStats, categories } = useExpenses();
   const stats = getExpenseStats();
-
+  const user = useUserStore((state) => state.user);
+  user == null ? navigate(`/signIn`) : "";
+  
   const StatCard: React.FC<{
     title: string;
     value: string;
@@ -88,7 +94,7 @@ const Dashboard: React.FC = () => {
           <h3 className="text-lg font-semibold text-slate-900 mb-4">
             Expenses by Category
           </h3>
-          <div className="space-y-3">
+          <div className="space-y-3 py-4">
             {stats.categoryBreakdown.map((category, index) => {
               const categoryData = categories.find(
                 (c) => c.name === category.category
@@ -125,33 +131,15 @@ const Dashboard: React.FC = () => {
           <h3 className="text-lg font-semibold text-slate-900 mb-4">
             Monthly Spending Trend
           </h3>
-          <div className="space-y-3">
-            {stats.monthlyTrend.map((month, index) => {
-              const maxAmount = Math.max(
-                ...stats.monthlyTrend.map((m) => m.amount)
-              );
-              const percentage =
-                maxAmount > 0 ? (month.amount / maxAmount) * 100 : 0;
-
-              return (
-                <div key={index} className="flex items-center justify-between">
-                  <span className="text-sm font-medium text-slate-700 w-20">
-                    {month.month}
-                  </span>
-                  <div className="flex-1 mx-4">
-                    <div className="w-full bg-slate-200 rounded-full h-2">
-                      <div
-                        className="bg-blue-600 h-2 rounded-full transition-all duration-300"
-                        style={{ width: `${percentage}%` }}
-                      />
-                    </div>
-                  </div>
-                  <span className="text-sm font-semibold text-slate-900 w-20 text-right">
-                    {formatCurrency(month.amount)}
-                  </span>
-                </div>
-              );
-            })}
+          <div className="h-60">
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart data={stats.monthlyTrend}>
+                <XAxis dataKey="month" />
+                <YAxis />
+                <Tooltip />
+                <Bar dataKey="amount" fill="#2563eb" radius={[6, 6, 0, 0]} />
+              </BarChart>
+            </ResponsiveContainer>
           </div>
         </div>
       </div>
