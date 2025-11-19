@@ -1,0 +1,92 @@
+export const ExpenseCategoryData = [
+  {
+    id: "1",
+    name: "Food & Dining",
+    color: "#EF4444",
+    icon: "UtensilsCrossed",
+    subCategory: [
+      { id: "1", name: "Online Delivery" },
+      { id: "2", name: "Food Court or Dine out" },
+      { id: "3", name: "Take away" },
+    ],
+  },
+  {
+    id: "2",
+    name: "Transportation",
+    color: "#3B82F6",
+    icon: "Car",
+    subCategory: [
+      { id: "1", name: "Petrol / Diesel / CNG" },
+      { id: "2", name: "Service Charges" },
+      { id: "3", name: "Parking" },
+      { id: "4", name: "Public transport" },
+      { id: "5", name: "Uber / OLA etc quick rides" },
+    ],
+  },
+  {
+    id: "3",
+    name: "Shopping",
+    color: "#8B5CF6",
+    icon: "ShoppingBag",
+    subCategory: [
+      { id: "1", name: "Online Shopping through amazon, flipkart, etc" },
+      { id: "2", name: "Grocery Shopping" },
+      { id: "3", name: "Clothing" },
+      { id: "4", name: "Electronics" },
+      { id: "5", name: "Home and Kitchen" },
+      { id: "6", name: "Medicines" },
+      { id: "7", name: "Others" },
+    ],
+  },
+  {
+    id: "4",
+    name: "Entertainment",
+    color: "#F59E0B",
+    icon: "Music",
+    subCategory: [
+      { id: "1", name: "Movie" },
+      { id: "2", name: "Gaming" },
+      { id: "3", name: "Others" },
+    ],
+  },
+  {
+    id: "5",
+    name: "Healthcare",
+    color: "#10B981",
+    icon: "Heart",
+    subCategory: [
+      { id: "1", name: "Hospital bills" },
+      { id: "2", name: "Doctor fees" },
+    ],
+  },
+  {
+    id: "6",
+    name: "Bills & Utilities",
+    color: "#6B7280",
+    icon: "Receipt",
+    subCategory: [
+      { id: "1", name: "Electricity bill" },
+      { id: "2", name: "Gas bill" },
+      { id: "3", name: "AMC Bill" },
+      { id: "4", name: "Mobile recharge" },
+    ],
+  },
+  {
+    id: "7",
+    name: "Education",
+    color: "#8B5CF6",
+    icon: "BookOpen",
+    subCategory: [
+      { id: "1", name: "School fees" },
+      { id: "2", name: "Classes fees" },
+      { id: "3", name: "Others" },
+    ],
+  },
+  {
+    id: "8",
+    name: "Other",
+    color: "#64748B",
+    icon: "MoreHorizontal",
+    subCategory: [{ id: "1", name: "Gave money to friends or relatives" }],
+  },
+];
