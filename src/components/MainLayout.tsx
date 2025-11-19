@@ -1,13 +1,14 @@
 import React from "react";
-import { PiggyBank, BarChart3, List, LogIn } from "lucide-react";
+import { PiggyBank, BarChart3, List, LogIn, User } from "lucide-react";
 import { useNavigate, Outlet, useLocation } from "react-router-dom";
 import { useExpenses } from "../hooks/useExpenses";
+import useUserStore from "../store/useUserStore";
 
 const navItems = [
     { id: "dashboard", label: "Dashboard", icon: BarChart3 },
     { id: "expenses", label: "Expenses", icon: List },
-    { id: "auth/signIn", label: "Sign In", icon: LogIn },
-    { id: "auth/signUp", label: "Sign Up", icon: LogIn },
+    { id: "", label: "Hello", icon: User },
+    { id: "signIn", label: "Log out", icon: LogIn },
   ];
 
 const MainLayout: React.FC = () => {
@@ -15,6 +16,11 @@ const MainLayout: React.FC = () => {
   const navigate = useNavigate();
 
   const { loading } = useExpenses();
+  const user = useUserStore((state) => state.user);
+
+  const handleLogout = () => {
+    useUserStore.getState().logout();
+  }
 
   if (loading) {
     return (
@@ -50,14 +56,17 @@ const MainLayout: React.FC = () => {
                 return (
                   <button
                     key={item.id}
-                    onClick={() => navigate(`/${item.id}`)}
+                    onClick={() => {
+                      item.label === "Log out" ? handleLogout() : '';
+                      navigate(`/${item.id}`);
+                    }}
                     className={`flex items-center space-x-2 px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${location.pathname.includes(`${item.id}`)
                         ? "bg-blue-100 text-blue-700 shadow-sm"
                         : "text-slate-600 hover:text-slate-900 hover:bg-slate-100"
                       }`}
                   >
                     <Icon className="h-4 w-4" />
-                    <span>{item.label}</span>
+                    {item.label == "Hello" ? <span>{user && user.fullName ? user.fullName : ""}</span> : <span>{item.label}</span>}
                   </button>
                 );
               })}
@@ -81,7 +90,7 @@ const MainLayout: React.FC = () => {
                   }`}
               >
                 <Icon className="h-5 w-5 mb-1" />
-                <span>{item.label}</span>
+                {item.label == "Hello" ? <span>{user && user.fullName ? user.fullName : ""}</span> : <span>{item.label}</span>}
               </button>
             );
           })}

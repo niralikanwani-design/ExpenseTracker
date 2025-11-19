@@ -10,7 +10,7 @@ const ExpenseList  =  lazy(() => import("./pages/ExpenseList"));
 
 const router = createBrowserRouter([
   {
-    path: "/Auth",
+    path: "/",
     Component: AuthLayout,
     children: [
       { index: true, Component: SignIn },
@@ -19,7 +19,7 @@ const router = createBrowserRouter([
     ],
   },
   {
-    path: "/",
+    path: "/Dashboard",
     Component: MainLayout,
     children: [
       { index: true, Component: Dashboard },
@@ -29,9 +29,9 @@ const router = createBrowserRouter([
   },
   {
     path: "*", 
-    Component: MainLayout, 
+    Component: AuthLayout, 
     children: [
-        { path: "*", Component: Dashboard}
+        { index: true, Component: SignIn }
     ]
   }
 ]);

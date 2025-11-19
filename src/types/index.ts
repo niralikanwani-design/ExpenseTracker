@@ -1,5 +1,5 @@
 export interface Expense {
-  id: string | null;
+  id: string;
   title: string;
   amount: number;
   category: string;
@@ -95,4 +95,34 @@ export interface IncomeStats {
     month: string;
     amount: number;
   }>;
+}
+
+export interface LoginModel {
+  email : string;
+  password : string;
+}
+
+export interface RegisterModel {
+  fullname : string,
+  email : string,
+  password : string
+}
+
+export interface User {
+  userId: string | number;
+  fullName: string;
+  email: string;
+}
+
+export interface UserStore {
+  user: User | null;
+  setUser: (userData: User) => void;
+  logout: () => void;
+}
+
+export interface DecodedToken {
+  UserId: string | number;
+  Email: string;
+  FullName: string;
+  exp: number;
 }
