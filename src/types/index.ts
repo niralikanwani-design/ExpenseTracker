@@ -1,22 +1,43 @@
-export interface Expense {
-  id: string;
-  title: string;
-  amount: number;
-  category: string;
-  date: string;
-  description?: string;
-  createdAt: string;
-  updatedAt: string;
-  type: string | null;
-}
+// export interface Expense {
+//   id: string | null;
+//   title: string;
+//   amount: number;
+//   category: string;
+//   date: string;
+//   description?: string;
+//   createdAt: string;
+//   updatedAt: string;
+//   type: string | null;
+// }
 
 export interface Transaction {
+  title: string | null;
+  transactionId: number | null;
   categoryId: number;
   amount: number;
   type: string | null;
   description: string | null;
   transactionDate: string;
   createdAt: string;
+}
+
+export interface FilterState {
+  title: string | null;
+  description: string | null;
+  categoryId: string  | null;
+  startDate: string  | null;
+  endDate: string  | null;
+}
+
+export interface TransactionFilterPayload {
+  PageNumber: number
+  PageSize:  number
+  Type:  string | null
+  StartDate:  string  | null
+  EndDate: string  | null
+  SortbyColumn:  string | null
+  SortbyOrder:  string | null
+  Filters: FilterState
 }
 
 export interface Income {
@@ -44,7 +65,7 @@ export interface Category {
 }
 
 export interface ExpenseFilter {
-  category?: string;
+  categoryId?: number;
   dateRange?: {
     start: string;
     end: string;
