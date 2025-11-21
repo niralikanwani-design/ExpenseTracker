@@ -1,32 +1,17 @@
 import React, { lazy, useEffect, useState } from "react";
 import { Plus, Download, FileText } from "lucide-react";
 import { useExpenses } from "../hooks/useExpenses";
-import { Expense } from "../types";
-import { formatCurrency } from "../utils/dateUtils";
-import ExpenseTable from "../components/Expense/ExpenseTable";
+import { useNavigate } from "react-router-dom";
+import { Transaction } from "../types";
 
-const ExpenseFilters = lazy(() => import("../components/Expense/ExpenseFilters"));
 const AddExpense = lazy(() => import("../components/Expense/AddExpense"));
+const ExpenseTable = lazy(() => import("../components/Expense/ExpenseTable"));
 
 const ExpenseList: React.FC = () => {
-  const {
-    expenses,
-    getFilteredExpenses,
-    filter,
-    setFilter,
-  } = useExpenses();
-  const [editingExpense, setEditingExpense] = useState<Expense | null>(null);
+  const { expenses, getFilteredTransactions } = useExpenses();
+  const [editingExpense, setEditingExpense] = useState<Transaction | null>(null);
   const [showAddForm, setShowAddForm] = useState(false);
-  const filteredExpenses = getFilteredExpenses();
-
-  useEffect(() => {
-    console.log(getFilteredExpenses(), expenses, filteredExpenses);
-  }, [filteredExpenses]);
-
-  const totalAmount = filteredExpenses.reduce(
-    (sum, expense) => sum + expense.amount,
-    0
-  );
+  const navigate = useNavigate();
 
   const handleCloseForm = () => {
     setEditingExpense(null);
@@ -36,11 +21,11 @@ const ExpenseList: React.FC = () => {
   const handleExport = () => {
     const csvContent = [
       ["Title", "Amount", "Category", "Date", "Description"],
-      ...filteredExpenses.map((expense) => [
+      ...expenses.map((expense) => [
         expense.title,
         expense.amount.toString(),
-        expense.category,
-        expense.date,
+        expense.categoryId,
+        expense.transactionDate,
         expense.description || "",
       ]),
     ]
@@ -64,7 +49,7 @@ const ExpenseList: React.FC = () => {
       />
     );
   }
-
+  
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
@@ -78,7 +63,7 @@ const ExpenseList: React.FC = () => {
             <span>Export CSV</span>
           </button>
           <button
-            onClick={() => setShowAddForm(true)}
+            onClick={() => { navigate("addExpense")}}
             className="flex items-center space-x-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
           >
             <Plus className="h-4 w-4" />
@@ -86,49 +71,7 @@ const ExpenseList: React.FC = () => {
           </button>
         </div>
       </div>
-
-      <ExpenseFilters filter={filter} onFilterChange={setFilter} />
-
-      {/* Summary */}
-      <div className="bg-white rounded-lg shadow-sm border border-slate-200 p-6">
-        <div className="flex items-center justify-between">
-          <div>
-            <p className="text-sm font-medium text-slate-600">
-              Showing {filteredExpenses.length} expenses
-            </p>
-            <p className="text-2xl font-bold text-slate-900">
-              Total: {formatCurrency(totalAmount)}
-            </p>
-          </div>
-          <div className="p-3 bg-blue-100 rounded-lg">
-            <FileText className="h-6 w-6 text-blue-600" />
-          </div>
-        </div>
-      </div>
-
-      {/* Expense Cards */}
-      {filteredExpenses.length === 0 ? (
-        <div className="text-center py-12">
-          <FileText className="h-16 w-16 text-slate-300 mx-auto mb-4" />
-          <h3 className="text-lg font-semibold text-slate-900 mb-2">
-            No expenses found
-          </h3>
-          <p className="text-slate-600 mb-6">
-            {filter.searchTerm || filter.category || filter.dateRange
-              ? "Try adjusting your filters or search terms."
-              : "Start by adding your first expense."}
-          </p>
-          <button
-            onClick={() => setShowAddForm(true)}
-            className="flex items-center space-x-2 px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors mx-auto"
-          >
-            <Plus className="h-5 w-5" />
-            <span>Add First Expense</span>
-          </button>
-        </div>
-      ) : (
-          <ExpenseTable expenses={expenses} />
-      )}
+          <ExpenseTable expenses={expenses} onSearchChange={getFilteredTransactions} onFilterModelChange={getFilteredTransactions} onSortModelChange={getFilteredTransactions}/>
     </div>
   );
 };

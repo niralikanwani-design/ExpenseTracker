@@ -3,7 +3,7 @@ import { PiggyBank } from "lucide-react";
 import { Outlet, useNavigate } from "react-router-dom";
 
 
-const MainLayout: React.FC = () => {
+const AuthLayout: React.FC = () => {
   const navigate = useNavigate();
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100">
@@ -33,4 +33,4 @@ const MainLayout: React.FC = () => {
   );
 };
 
-export default MainLayout;
+export default AuthLayout;

@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 import { Plus, Save, X } from "lucide-react";
 import { useExpenses } from "../../hooks/useExpenses";
-import { Expense } from "../../types";
+import {  Transaction } from "../../types";
 
 interface AddExpenseProps {
-  editingExpense?: Expense;
+  editingExpense?: Transaction;
   onClose?: () => void;
 }
 
@@ -13,8 +13,8 @@ const AddExpense: React.FC<AddExpenseProps> = ({ editingExpense, onClose }) => {
   const [formData, setFormData] = useState({
     title: editingExpense?.title || "",
     amount: editingExpense?.amount || "",
-    category: editingExpense?.category || "",
-    date: editingExpense?.date || new Date().toISOString().split("T")[0],
+    category: editingExpense?.categoryId || "",
+    date: editingExpense?.transactionDate || new Date().toISOString().split("T")[0],
     description: editingExpense?.description || "",
   });
 
@@ -46,22 +46,24 @@ const AddExpense: React.FC<AddExpenseProps> = ({ editingExpense, onClose }) => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
     if (!validateForm()) return;
 
     setIsSubmitting(true);
 
     try {
-      const expenseData = {
-        title: formData.title.trim(),
+      const expenseData: Transaction = {
+        transactionId: null,
+        title: formData.title,
         amount: parseFloat(formData.amount.toString()),
-        category: formData.category,
-        date: formData.date,
+        categoryId: 2,
+        transactionDate: formData.date,
         description: formData.description.trim(),
+        createdAt: Date.UTC.toString(),
+        type: "Expense"
       };
 
       if (editingExpense) {
-        updateExpense(editingExpense.id, expenseData);
+        editingExpense.transactionId && updateExpense(editingExpense.transactionId, expenseData);
       } else {
         addExpense(expenseData);
       }

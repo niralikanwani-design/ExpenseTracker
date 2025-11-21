@@ -1,7 +1,6 @@
 import React from "react";
 import { PiggyBank, BarChart3, List, LogIn, User } from "lucide-react";
 import { useNavigate, Outlet, useLocation } from "react-router-dom";
-import { useExpenses } from "../hooks/useExpenses";
 import useUserStore from "../store/useUserStore";
 
 const navItems = [
@@ -15,22 +14,10 @@ const MainLayout: React.FC = () => {
   const location = useLocation();
   const navigate = useNavigate();
 
-  const { loading } = useExpenses();
   const user = useUserStore((state) => state.user);
 
   const handleLogout = () => {
     useUserStore.getState().logout();
-  }
-
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-4 border-blue-600 border-t-transparent mx-auto mb-4"></div>
-          <p className="text-slate-600">Loading your expenses...</p>
-        </div>
-      </div>
-    );
   }
 
   return (
@@ -40,7 +27,7 @@ const MainLayout: React.FC = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             <div className="flex items-center space-x-3">
-              <button>
+              <button className="flex items-center space-x-3" onClick={() => {navigate("/Dashboard")}}>
                 <div className="p-2 bg-blue-600 rounded-lg">
                   <PiggyBank className="h-6 w-6 text-white" />
                 </div>
