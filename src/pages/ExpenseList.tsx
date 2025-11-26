@@ -69,6 +69,13 @@ const ExpenseList: React.FC = () => {
             <Plus className="h-4 w-4" />
             <span>Add Expense</span>
           </button>
+          <button
+            onClick={() => { navigate("addIncome")}}
+            className="flex items-center space-x-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+          >
+            <Plus className="h-4 w-4" />
+            <span>Add Income</span>
+          </button>
         </div>
       </div>
           <ExpenseTable expenses={expenses} onSearchChange={getFilteredTransactions} onFilterModelChange={getFilteredTransactions} onSortModelChange={getFilteredTransactions}/>

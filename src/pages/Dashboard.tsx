@@ -9,15 +9,12 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Bar, BarChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 import { GetDashboardData } from "../dataAccess/dashboardDAL";
-import { useExpenses } from "../hooks/useExpenses";
 import useUserStore from "../store/useUserStore";
 import { formatCurrency } from "../utils/dateUtils";
 import { CategoryData, DashboardData, MonthlyData, QuickInsight } from "../types";
 
 const Dashboard: React.FC = () => {
   const navigate = useNavigate();
-  const { getExpenseStats, categories } = useExpenses();
-  const stats = getExpenseStats();
   const user = useUserStore((state) => state.user);
   user == null ? navigate(`/signIn`) : "";
   const [dashboardData, setDashboardData] = useState<DashboardData>();
@@ -25,6 +22,7 @@ const Dashboard: React.FC = () => {
   const [monthlyData, setMonthlyData] = useState<MonthlyData[]>([]);
   const [quickInsight, setQuickInsight] = useState<QuickInsight | null>(null);
   const [selectedMonth, setSelectedMonth] = useState(new Date().getMonth() + 1);
+  const [selectedType, setSelectedType] = useState("expense");
   const categoryColors: Record<string, string> = {
     Food: "#10B981",
     Transport: "#3B82F6",
@@ -59,7 +57,14 @@ const Dashboard: React.FC = () => {
   const getDashboardData = async () => {
     try {
       // const currentMonth = new Date().getMonth() + 1;
-      const result = await GetDashboardData(user?.userId ?? 0,selectedMonth);
+      await dashboardDataAPI("Expense");
+    } catch (error) {
+
+    }
+  }
+
+  const dashboardDataAPI = async (type : string) => {
+    const result = await GetDashboardData(user?.userId ?? 0,selectedMonth,type);
       setDashboardData(result.summary);
 
       // For category
@@ -103,10 +108,11 @@ const Dashboard: React.FC = () => {
       
       setQuickInsight(quickInsightData);
       console.log(quickInsight);
+  }
 
-    } catch (error) {
-
-    }
+  const radioButtonChange = async (e : any) => {
+    setSelectedType(e.target.value);
+    dashboardDataAPI(e.target.value);
   }
 
   const StatCard: React.FC<{
@@ -142,10 +148,37 @@ const Dashboard: React.FC = () => {
     </div>
   );
 
+  console.log(selectedType, "selectedType")
+
   return (
     <div className="space-y-8">
       <div className="flex items-center justify-between">
         <h2 className="text-3xl font-bold text-slate-900">Dashboard</h2>
+        <div className="flex items-center space-x-3">
+          <label className="flex items-center space-x-1 cursor-pointer">
+            <input
+              type="radio"
+              name="type"
+              value="Expense"
+              checked={selectedType.toLowerCase() === "expense"}
+              onChange={(e) => radioButtonChange(e)}
+              className="h-4 w-4"
+            />
+            <span>Expense</span>
+          </label>
+
+          <label className="flex items-center space-x-1 cursor-pointer">
+            <input
+              type="radio"
+              name="type"
+              value="Income"
+              checked={selectedType.toLowerCase() === "income"}
+              onChange={(e) => radioButtonChange(e)}
+              className="h-4 w-4"
+            />
+            <span>Income</span>
+          </label>
+        </div>
         <div className="flex items-center space-x-2 text-sm text-slate-600">
           <Calendar className="h-4 w-4" />
           <select
@@ -259,9 +292,7 @@ const Dashboard: React.FC = () => {
               {quickInsight?.highestCategory ?? "N/A"}
             </p>
             <p className="text-xs text-blue-600">
-              {stats.categoryBreakdown[0]
-                ? formatCurrency(quickInsight?.hightestCategoryAmount ?? 0)
-                : "$0"}
+              {formatCurrency(quickInsight?.hightestCategoryAmount ?? 0)}
             </p>
           </div>
           <div className="p-4 bg-emerald-50 rounded-lg">
@@ -272,8 +303,8 @@ const Dashboard: React.FC = () => {
               )}
             </p>
             <p className="text-xs text-emerald-600">
-              {stats.monthlyTrend[stats.monthlyTrend.length - 1]?.month ||
-                "N/A"}
+              {/* {stats.monthlyTrend[stats.monthlyTrend.length - 1]?.month ||
+                "N/A"} */}
             </p>
           </div>
           <div className="p-4 bg-purple-50 rounded-lg">

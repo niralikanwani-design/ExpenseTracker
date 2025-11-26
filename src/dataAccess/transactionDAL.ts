@@ -1,5 +1,5 @@
 import { TransactionFilterPayload } from "../types";
-import { AxiosDelete, AxiosPost, AxiosPut } from "../utils/axios";
+import { AxiosDelete, AxiosGet, AxiosPost, AxiosPut } from "../utils/axios";
 
 const ENDPOINT = "api/Transactions";
 
@@ -22,3 +22,8 @@ export const DeleteTransaction = async (id: number): Promise<any> => {
   let result = await AxiosDelete(ENDPOINT + `/DeleteTransaction`, id);
   return result.data;
 };
+
+export const GetCategoryName = async () : Promise<any> => {
+  let result = await AxiosGet(ENDPOINT + '/GetIncomeCategory');
+  return result;
+}

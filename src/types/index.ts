@@ -175,3 +175,8 @@ export interface DecodedToken {
   totalAmount : number;
   dailyAverage : number;
  }
+
+ export interface CategoryList {
+  categoryId : number;
+  categoryName : string
+ }
