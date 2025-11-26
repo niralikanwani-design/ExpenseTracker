@@ -197,9 +197,9 @@ const ExpenseTable: React.FC = () => {
         </Box>
       ),
       renderCell: (params: any) => {
-        const sign = params.row.type === "income" ? "+" : "-";
+        const sign = params.row.type === "Income" ? "+" : "-";
         const textColorClass =
-          params.row.type === "income" ? "text-green-600" : "text-red-600";
+          params.row.type === "Income" ? "text-green-600" : "text-red-600";
         return (
           <span className={`font-medium ${textColorClass}`}>
             {typeof params.value === 'number'

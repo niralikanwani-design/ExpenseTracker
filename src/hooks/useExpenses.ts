@@ -13,7 +13,7 @@ export const useExpenses = () => {
   const initialTransactionPayload: TransactionFilterPayload = {
     PageNumber: 1,
     PageSize: 10,
-    Type: "Expense",
+    Type: "",
     StartDate: null,
     EndDate: null,
     SortbyColumn: null,
@@ -40,6 +40,7 @@ export const useExpenses = () => {
           categoryId: x.categoryId,
           transactionDate: x.transactionDate,
           description: x.description ?? "",
+          type: x.type ?? "",
           createdAt: x.createdAt,
           transactionId: x.transactionId
       } as Transaction

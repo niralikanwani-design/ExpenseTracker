@@ -8,6 +8,7 @@ const AuthLayout = lazy(() => import("./components/AuthLayout"));
 const Dashboard  = lazy(() => import("./pages/Dashboard"));
 const ExpenseList  =  lazy(() => import("./pages/ExpenseList"));
 const AddExpense = lazy(() => import("./components/Expense/AddExpense"));
+const AddIncome = lazy(() => import("./components/Expense/AddIncome"));
 
 const router = createBrowserRouter([
   {
@@ -31,7 +32,8 @@ const router = createBrowserRouter([
     Component: MainLayout,
     children: [
       { index: true, Component: ExpenseList },
-      { path: "addExpense", Component: AddExpense }
+      { path: "addExpense", Component: AddExpense },
+      { path: "addIncome", Component: AddIncome }
     ],
   },
   {
