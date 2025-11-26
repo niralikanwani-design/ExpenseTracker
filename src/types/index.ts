@@ -146,4 +146,37 @@ export interface DecodedToken {
   Email: string;
   FullName: string;
   exp: number;
-}
+} 
+
+ export interface DashboardData {
+  totalExpenses : number;
+  numberofExpenses : number;
+  averageExpense : number;
+  expenseCategoriesUsed : number;
+  last30DaysTotal : number;
+  last30DaysAverage : number;
+ }
+
+ export interface CategoryData {
+  categoryId : number;
+  categoryName : string;
+  totalAmount : number;
+  percentage : number;
+ }
+
+ export interface MonthlyData {
+  month : string;
+  totalAmount : number;
+ }
+
+ export interface QuickInsight {
+  highestCategory : string;
+  hightestCategoryAmount : number;
+  totalAmount : number;
+  dailyAverage : number;
+ }
+
+ export interface CategoryList {
+  categoryId : number;
+  categoryName : string
+ }
