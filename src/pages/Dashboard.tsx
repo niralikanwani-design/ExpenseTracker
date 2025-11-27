@@ -107,7 +107,6 @@ const Dashboard: React.FC = () => {
       };
       
       setQuickInsight(quickInsightData);
-      console.log(quickInsight);
   }
 
   const radioButtonChange = async (e : any) => {
@@ -148,7 +147,6 @@ const Dashboard: React.FC = () => {
     </div>
   );
 
-  console.log(selectedType, "selectedType")
 
   return (
     <div className="space-y-8">

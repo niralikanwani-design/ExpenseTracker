@@ -8,6 +8,11 @@ export const GetTransactions = async (payload: TransactionFilterPayload): Promis
   return result?.data ?? [];
 };
 
+export const GetTransactionById = async (id: number): Promise<any> => {
+  let result = await AxiosGet(ENDPOINT + `/GetTransactionById/${id}`);
+  return result?.data ?? [];
+};
+
 export const AddTransaction = async (payload: any): Promise<any> => {
   let result = await AxiosPost(ENDPOINT + `/AddTransaction`, payload);
   return result.data;
@@ -19,11 +24,16 @@ export const UpdateTransaction = async (payload: any): Promise<any> => {
 };
 
 export const DeleteTransaction = async (id: number): Promise<any> => {
-  let result = await AxiosDelete(ENDPOINT + `/DeleteTransaction`, id);
+  let result = await AxiosDelete(ENDPOINT + `/DeleteTransaction/${id}`);
   return result.data;
 };
 
-export const GetCategoryName = async () : Promise<any> => {
-  let result = await AxiosGet(ENDPOINT + '/GetIncomeCategory');
-  return result;
-}
+export const GetTotalTransactionsCount = async (): Promise<any> => {
+  let result = await AxiosGet(ENDPOINT + `/GetTotalTransactionCount`);
+  return result?.data ?? 0;
+};
+
+export const GetCategories = async (): Promise<any> => {
+  let result = await AxiosGet(ENDPOINT + `/GetCategories`);
+  return result?.data ?? [];
+};
