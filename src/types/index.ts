@@ -11,22 +11,32 @@
 // }
 
 export interface Transaction {
+  userId?: number;
   title: string | null;
   transactionId: number | null;
   categoryId: number;
+  categoryName?: string | null | undefined;
   amount: number;
   type: string | null;
   description: string | null;
   transactionDate: string;
   createdAt: string;
+  updatedAt?: string | null;
 }
 
 export interface FilterState {
   title: string | null;
   description: string | null;
-  categoryId: string  | null;
+  categoryName: string  | null;
   startDate: string  | null;
   endDate: string  | null;
+  amount: number | null | undefined;
+  type: string | null;
+}
+
+export interface SortState {
+  sortByColumn: string | null;
+  sortByOrder: string | null;
 }
 
 export interface TransactionFilterPayload {
@@ -57,11 +67,10 @@ export interface SubCategory {
 }
 
 export interface Category {
-  id: string;
+  categoryId: number;
   name: string;
-  color: string;
-  icon: string;
-  subCategory: SubCategory[];
+  type: "Income" | "Expense";
+  userId: number;
 }
 
 export interface ExpenseFilter {

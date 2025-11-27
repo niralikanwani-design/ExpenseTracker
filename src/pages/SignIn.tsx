@@ -60,7 +60,6 @@ const SignIn = () => {
     setIsSubmitting(true);
 
     try {
-      // console.log("Submitted:", formData);
       // API call 
       const result = await LoginUser(formData)
       if(result.success){

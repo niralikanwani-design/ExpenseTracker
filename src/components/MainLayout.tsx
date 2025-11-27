@@ -5,7 +5,7 @@ import useUserStore from "../store/useUserStore";
 
 const navItems = [
     { id: "dashboard", label: "Dashboard", icon: BarChart3 },
-    { id: "expenses", label: "Expenses", icon: List },
+    { id: "transactions", label: "Transactions", icon: List },
     { id: "", label: "Hello", icon: User },
     { id: "signIn", label: "Log out", icon: LogIn },
   ];

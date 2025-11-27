@@ -81,10 +81,7 @@ const SignUp = () => {
         password: formData.password,
       };
 
-      console.log("Submitting:", data);
-      // API CALL HERE...
       const result = await RegisterUser(data)
-      console.log(result);
       if(result.islogin){
         const token = result.token;
         const decoded = jwtDecode<DecodedToken>(token);
