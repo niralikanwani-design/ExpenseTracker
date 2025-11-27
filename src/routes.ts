@@ -6,9 +6,8 @@ const SignUp = lazy(() => import("./pages/SignUp"));
 const MainLayout = lazy(() => import("./components/MainLayout"));
 const AuthLayout = lazy(() => import("./components/AuthLayout"));
 const Dashboard  = lazy(() => import("./pages/Dashboard"));
-const ExpenseList  =  lazy(() => import("./pages/ExpenseList"));
-const AddExpense = lazy(() => import("./components/Expense/AddExpense"));
-const AddIncome = lazy(() => import("./components/Expense/AddIncome"));
+const TransactionList  =  lazy(() => import("./pages/TransactionList"));
+const AddUpdateTransaction = lazy(() => import("./components/Transaction/AddUpdateTransaction"));
 
 const router = createBrowserRouter([
   {
@@ -28,12 +27,12 @@ const router = createBrowserRouter([
     ],
   },
   {
-    path: "/Expenses",
+    path: "/Transactions",
     Component: MainLayout,
     children: [
-      { index: true, Component: ExpenseList },
-      { path: "addExpense", Component: AddExpense },
-      { path: "addIncome", Component: AddIncome }
+      { index: true, Component: TransactionList },
+      { path: "Add", Component: AddUpdateTransaction },
+      { path: "Update/:id", Component: AddUpdateTransaction }
     ],
   },
   {

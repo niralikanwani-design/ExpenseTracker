@@ -1,22 +1,54 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Plus, Save, X } from "lucide-react";
-import { useExpenses } from "../../hooks/useExpenses";
+import { useTransactions } from "../../hooks/useTransactions";
 import {  Transaction } from "../../types";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
+import { toast } from "react-toastify";
+import useUserStore from "../../store/useUserStore";
 
-interface AddExpenseProps {
-  editingExpense?: Transaction;
-  onClose?: () => void;
-}
+const AddUpdateTransaction: React.FC = () => {
+  const location = useLocation();
+  const navigate = useNavigate();
+  const user = useUserStore((state) => state.user);
+  const { id } = useParams();
 
-const AddExpense: React.FC<AddExpenseProps> = ({ editingExpense, onClose }) => {
-  const { addExpense, updateExpense, categories } = useExpenses();
+  const type  = location.state?.type || "Expense";
+  const userId = parseInt(user?.userId.toString() ?? "0");
+
+  userId || navigate('/SignIn');
+  
+  const editingTransactionId = id ? parseInt(id) : null;
+  const isNewTransaction = !editingTransactionId;
+  const { addTransaction, updateTransaction, categories, transactions } = useTransactions();
+  const editingTransaction = isNewTransaction ? null : transactions.find(t => t.transactionId === editingTransactionId);
+
   const [formData, setFormData] = useState({
-    title: editingExpense?.title || "",
-    amount: editingExpense?.amount || "",
-    category: editingExpense?.categoryId || "",
-    date: editingExpense?.transactionDate || new Date().toISOString().split("T")[0],
-    description: editingExpense?.description || "",
+    title: "",
+    amount: 0,
+    category: 0,
+    date: new Date().toISOString().split("T")[0],
+    description: "",
+    type: type,
+    useId: userId
   });
+
+
+  const onClose = () => {
+    navigate(`/transactions`);
+  };
+
+  useEffect(() => {
+    if (editingTransaction) {
+      setFormData({
+      title: editingTransaction?.title || "",
+      amount: editingTransaction?.amount ?? 0,
+      category: editingTransaction?.categoryId ?? 0,
+      date: editingTransaction?.transactionDate ? new Date(editingTransaction.transactionDate).toISOString().split("T")[0] : new Date().toISOString().split("T")[0],
+      description: editingTransaction?.description || "",
+      type: type,
+      useId: userId
+    } )}
+    }, [editingTransaction]);
 
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -32,7 +64,7 @@ const AddExpense: React.FC<AddExpenseProps> = ({ editingExpense, onClose }) => {
       newErrors.amount = "Amount must be greater than 0";
     }
 
-    if (!formData.category) {
+    if (!formData.category || parseInt(formData.category.toString()) === 0) {
       newErrors.category = "Category is required";
     }
 
@@ -52,34 +84,39 @@ const AddExpense: React.FC<AddExpenseProps> = ({ editingExpense, onClose }) => {
 
     try {
       const expenseData: Transaction = {
-        transactionId: null,
+        transactionId: isNewTransaction ? null : editingTransaction?.transactionId ?? null,
         title: formData.title,
         amount: parseFloat(formData.amount.toString()),
-        categoryId: 2,
+        categoryId: parseInt(formData.category.toString()),
         transactionDate: formData.date,
         description: formData.description.trim(),
         createdAt: Date.UTC.toString(),
-        type: "Expense"
+        type: formData.type as "Expense" | "Income",
+        userId: userId, 
       };
 
-      if (editingExpense) {
-        editingExpense.transactionId && updateExpense(editingExpense.transactionId, expenseData);
+      let result;
+      if (editingTransaction && editingTransaction.transactionId) {
+        result = await updateTransaction(expenseData);
       } else {
-        addExpense(expenseData);
+        result = await addTransaction(expenseData);
       }
 
-      // Reset form
       setFormData({
         title: "",
-        amount: "",
-        category: "",
+        amount: 0,
+        category: 0,
         date: new Date().toISOString().split("T")[0],
         description: "",
+        type: type,
+        useId: userId
       });
 
-      if (onClose) {
-        onClose();
+      onClose();
+      if (result === true) {
+        toast.success("Transaction saved successfully!");
       }
+
     } catch (error) {
       console.error("Error saving expense:", error);
     } finally {
@@ -106,26 +143,24 @@ const AddExpense: React.FC<AddExpenseProps> = ({ editingExpense, onClose }) => {
       <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
         <div className="flex items-center justify-between mb-6">
           <h2 className="text-2xl font-bold text-slate-900">
-            {editingExpense ? "Edit Expense" : "Add New Expense"}
+            {editingTransaction ? `Edit ${type}` : `Add New ${type}`}
           </h2>
-          {onClose && (
-            <button
+          <button
               onClick={onClose}
               className="p-2 text-slate-400 hover:text-slate-600 rounded-lg hover:bg-slate-100 transition-colors"
             >
               <X className="h-5 w-5" />
             </button>
-          )}
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-6">
-          {/* Title */}
+          {/* <input name="type" value={type} type="hidden"></input> */}
           <div>
             <label
               htmlFor="title"
               className="block text-sm font-medium text-slate-700 mb-2"
             >
-              Expense Title
+              Title
             </label>
             <input
               type="text"
@@ -138,14 +173,13 @@ const AddExpense: React.FC<AddExpenseProps> = ({ editingExpense, onClose }) => {
                   ? "border-red-300 focus:border-red-500 focus:ring-red-200"
                   : "border-slate-300 focus:border-blue-500 focus:ring-blue-200"
               } focus:outline-none focus:ring-2`}
-              placeholder="Enter expense title"
+              placeholder="Enter title"
             />
             {errors.title && (
               <p className="mt-1 text-sm text-red-600">{errors.title}</p>
             )}
           </div>
 
-          {/* Amount and Category Row */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <label
@@ -192,9 +226,9 @@ const AddExpense: React.FC<AddExpenseProps> = ({ editingExpense, onClose }) => {
                     : "border-slate-300 focus:border-blue-500 focus:ring-blue-200"
                 } focus:outline-none focus:ring-2`}
               >
-                <option value="">Select a category</option>
-                {categories.map((category) => (
-                  <option key={category.id} value={category.name}>
+                <option value="0">Select a category</option>
+                {categories.filter(x => x.type === type).map((category) =>(
+                  <option key={category.categoryId} value={category.categoryId} >
                     {category.name}
                   </option>
                 ))}
@@ -205,7 +239,6 @@ const AddExpense: React.FC<AddExpenseProps> = ({ editingExpense, onClose }) => {
             </div>
           </div>
 
-          {/* Date */}
           <div>
             <label
               htmlFor="date"
@@ -230,7 +263,6 @@ const AddExpense: React.FC<AddExpenseProps> = ({ editingExpense, onClose }) => {
             )}
           </div>
 
-          {/* Description */}
           <div>
             <label
               htmlFor="description"
@@ -245,11 +277,10 @@ const AddExpense: React.FC<AddExpenseProps> = ({ editingExpense, onClose }) => {
               onChange={handleChange}
               rows={3}
               className="w-full px-4 py-3 rounded-lg border border-slate-300 focus:border-blue-500 focus:ring-blue-200 focus:outline-none focus:ring-2 transition-colors"
-              placeholder="Add any additional details about this expense"
+              placeholder="Add any additional details about this transaction"
             />
           </div>
 
-          {/* Submit Button */}
           <div className="flex items-center justify-end space-x-3 pt-4">
             {onClose && (
               <button
@@ -272,13 +303,13 @@ const AddExpense: React.FC<AddExpenseProps> = ({ editingExpense, onClose }) => {
                 </>
               ) : (
                 <>
-                  {editingExpense ? (
+                  {editingTransaction ? (
                     <Save className="h-4 w-4" />
                   ) : (
                     <Plus className="h-4 w-4" />
                   )}
                   <span>
-                    {editingExpense ? "Update Expense" : "Add Expense"}
+                    {editingTransaction ? `Update ${type}` : `Add ${type}`}
                   </span>
                 </>
               )}
@@ -290,4 +321,4 @@ const AddExpense: React.FC<AddExpenseProps> = ({ editingExpense, onClose }) => {
   );
 };
 
-export default AddExpense;
+export default AddUpdateTransaction;
