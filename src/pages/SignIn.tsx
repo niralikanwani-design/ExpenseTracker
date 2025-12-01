@@ -1,10 +1,11 @@
 import { jwtDecode } from "jwt-decode";
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { LoginUser } from "../dataAccess/loginDAL";
+import { LoginUser, LoginWithGoogle } from "../dataAccess/loginDAL";
 import { DecodedToken, LoginModel } from "../types";
 import { toast } from "react-toastify";
 import useUserStore from "../store/useUserStore";
+import { GoogleLogin } from "@react-oauth/google";
 
 const SignIn = () => {
   const navigate = useNavigate();
@@ -91,6 +92,31 @@ const SignIn = () => {
     }
   };
 
+  const handleGoogleSuccess = async (credentialResponse: any) => {
+    try {
+      const idToken = credentialResponse.credential;
+  
+      const result = await LoginWithGoogle(idToken);
+  
+      toast.success("Logged in with Google!");
+  
+      if (result.token) {
+        const decodedToken = jwtDecode<DecodedToken>(result.token);
+  
+        setUser({
+          userId: decodedToken.UserId,
+          fullName: decodedToken.FullName,
+          email: decodedToken.Email,
+        });
+      }
+  
+      navigate("/Dashboard");
+    } catch (error) {
+      console.error(error);
+      toast.error("Google Login failed!");
+    }
+  };  
+
   return (
     <div className="max-w-2xl mx-auto">
       <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
@@ -151,7 +177,7 @@ const SignIn = () => {
             )}
           </div>
 
-          <div className="flex items-center justify-end space-x-3 pt-4">
+          <div className="flex items-center justify-center space-x-3 pt-4">
             <button
               type="submit"
               disabled={isSubmitting}
@@ -167,6 +193,15 @@ const SignIn = () => {
             >
               Sign Up
             </button>
+          </div>
+          <div className="pt-4 flex items-center justify-center">
+            <GoogleLogin
+              onSuccess={handleGoogleSuccess}
+              onError={() => {
+                toast.error("Google Login Failed");
+              }}
+              width="310"
+            />
           </div>
 
         </form>

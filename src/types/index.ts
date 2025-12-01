@@ -10,6 +10,8 @@
 //   type: string | null;
 // }
 
+import { ReactNode } from "react";
+
 export interface Transaction {
   userId?: number;
   title: string | null;
@@ -189,3 +191,7 @@ export interface DecodedToken {
   categoryId : number;
   categoryName : string
  }
+
+ export interface GoogleAuthWrapperProps {
+  children: ReactNode;
+}
