@@ -1,11 +1,12 @@
 import { useState, useEffect } from "react";
-import { Category, ExpenseFilter, FilterState, Transaction, TransactionFilterPayload } from "../types";
-import { AddTransaction, DeleteTransaction, GetCategories, GetTotalTransactionsCount, GetTransactionById, GetTransactions, UpdateTransaction } from "../dataAccess/transactionDAL";
+import { AccountType, Category, ExpenseFilter, FilterState, Transaction, TransactionFilterPayload } from "../types";
+import { AddTransaction, DeleteTransaction, GetAccountType, GetCategories, GetTotalTransactionsCount, GetTransactionById, GetTransactions, UpdateTransaction } from "../dataAccess/transactionDAL";
 
 export const useTransactions = () => {
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [totalTransactions, setTotalTransactions] = useState<number>(0);
   const [categories, setCategories] = useState<Category[]>([]);
+  const [accountType, setAccountType] = useState<AccountType[]>([]);
   const [filter, setFilter] = useState<ExpenseFilter>({});
   const [loading, setLoading] = useState(true);
 
@@ -27,7 +28,7 @@ export const useTransactions = () => {
   useEffect(() => {
     const loadInitialData = async () => {
       setLoading(true);
-      let Transactions: Transaction[] = await GetTransactions(initialTransactionPayload);
+      let Transactions: Transaction[] = await GetTransactions(initialTransactionPayload) || [];
       setTransactions(Transactions.map(x => {
         return {
           title: x.title,
@@ -38,14 +39,20 @@ export const useTransactions = () => {
           type: x.type ?? "",
           description: x.description ?? "",
           createdAt: x.createdAt,
-          transactionId: x.transactionId
+          transactionId: x.transactionId,
+          accountTypeId: x.accountTypeId
       } as Transaction}));
 
       let totalTransactionsCount = await GetTotalTransactionsCount();
       setTotalTransactions(totalTransactionsCount);
 
       let categories = await GetCategories();
+
       setCategories(categories);
+
+      let accountType = await GetAccountType();
+
+      setAccountType(accountType);
       setLoading(false);
     };
 
@@ -100,6 +107,7 @@ export const useTransactions = () => {
   return {
     transactions,
     categories,
+    accountType,
     filter,
     loading,
     totalTransactions,

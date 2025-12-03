@@ -17,7 +17,7 @@ export const LoginUser = async (formData : LoginModel): Promise<any> => {
     try {
       const response = await AxiosPost(ENDPOINT + `/LoginWithGoogle`, {
         idToken: idToken
-      });
+      }, false);
       return response.data;
     } catch (error: any) {
       throw error.response?.data || { message: "Something went wrong" };

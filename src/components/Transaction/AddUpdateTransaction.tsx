@@ -16,10 +16,10 @@ const AddUpdateTransaction: React.FC = () => {
   const userId = parseInt(user?.userId.toString() ?? "0");
 
   userId || navigate('/SignIn');
-  
+   
   const editingTransactionId = id ? parseInt(id) : null;
   const isNewTransaction = !editingTransactionId;
-  const { addTransaction, updateTransaction, categories, transactions } = useTransactions();
+  const { addTransaction, updateTransaction, categories,accountType, transactions } = useTransactions();
   const editingTransaction = isNewTransaction ? null : transactions.find(t => t.transactionId === editingTransactionId);
 
   const [formData, setFormData] = useState({
@@ -27,6 +27,7 @@ const AddUpdateTransaction: React.FC = () => {
     amount: 0,
     category: 0,
     date: new Date().toISOString().split("T")[0],
+    accountType : 0,
     description: "",
     type: type,
     useId: userId
@@ -43,6 +44,7 @@ const AddUpdateTransaction: React.FC = () => {
       title: editingTransaction?.title || "",
       amount: editingTransaction?.amount ?? 0,
       category: editingTransaction?.categoryId ?? 0,
+      accountType : editingTransaction?.accountTypeId ?? 0,
       date: editingTransaction?.transactionDate ? new Date(editingTransaction.transactionDate).toISOString().split("T")[0] : new Date().toISOString().split("T")[0],
       description: editingTransaction?.description || "",
       type: type,
@@ -62,6 +64,10 @@ const AddUpdateTransaction: React.FC = () => {
 
     if (!formData.amount || parseFloat(formData.amount.toString()) <= 0) {
       newErrors.amount = "Amount must be greater than 0";
+    }
+
+    if (!formData.category || parseInt(formData.category.toString()) === 0) {
+      newErrors.category = "Category is required";
     }
 
     if (!formData.category || parseInt(formData.category.toString()) === 0) {
@@ -92,7 +98,8 @@ const AddUpdateTransaction: React.FC = () => {
         description: formData.description.trim(),
         createdAt: Date.UTC.toString(),
         type: formData.type as "Expense" | "Income",
-        userId: userId, 
+        userId: userId,
+        accountTypeId: parseInt(formData.accountType.toString())
       };
 
       let result;
@@ -106,6 +113,7 @@ const AddUpdateTransaction: React.FC = () => {
         title: "",
         amount: 0,
         category: 0,
+        accountType : 0,
         date: new Date().toISOString().split("T")[0],
         description: "",
         type: type,
@@ -242,6 +250,7 @@ const AddUpdateTransaction: React.FC = () => {
             </div>
           </div>
 
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
             <label
               htmlFor="date"
@@ -265,7 +274,35 @@ const AddUpdateTransaction: React.FC = () => {
               <p className="mt-1 text-sm text-red-600">{errors.date}</p>
             )}
           </div>
-
+          <div className="">
+            <label
+              htmlFor="type"
+              className="block text-sm font-medium text-slate-700 mb-2"
+            >
+              Type
+            </label>
+            <select
+              id="type"
+              name="accountType"
+              value={formData.accountType}
+              onChange={handleChange}
+              className={`w-full px-4 py-3 rounded-lg border transition-colors ${errors.type
+                  ? "border-red-300 focus:border-red-500 focus:ring-red-200"
+                  : "border-slate-300 focus:border-blue-500 focus:ring-blue-200"
+                } focus:outline-none focus:ring-2`}
+            >
+              <option value="0">Select a Type</option>
+                {accountType.filter(x => x.accountType === type).map((account) =>(
+                  <option key={account.accountId} value={account.accountId} >
+                    {account.accountName}
+                  </option>
+                ))}
+            </select>
+            {errors.type && (
+              <p className="mt-1 text-sm text-red-600">{errors.type}</p>
+            )}
+          </div>
+          </div>
           <div>
             <label
               htmlFor="description"
