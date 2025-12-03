@@ -10,12 +10,16 @@
 //   type: string | null;
 // }
 
+import { ReactNode } from "react";
+
 export interface Transaction {
   userId?: number;
   title: string | null;
   transactionId: number | null;
   categoryId: number;
   categoryName?: string | null | undefined;
+  accountTypeId : number;
+  accpuntTypeName? : string | null | undefined;
   amount: number;
   type: string | null;
   description: string | null;
@@ -71,6 +75,12 @@ export interface Category {
   name: string;
   type: "Income" | "Expense";
   userId: number;
+}
+
+export interface AccountType {
+  accountId : number;
+  accountName : string;
+  accountType : string;
 }
 
 export interface ExpenseFilter {
@@ -189,3 +199,7 @@ export interface DecodedToken {
   categoryId : number;
   categoryName : string
  }
+
+ export interface GoogleAuthWrapperProps {
+  children: ReactNode;
+}

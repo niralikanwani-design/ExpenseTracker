@@ -34,6 +34,11 @@ export const GetTotalTransactionsCount = async (): Promise<any> => {
 };
 
 export const GetCategories = async (): Promise<any> => {
-  let result = await AxiosGet(ENDPOINT + `/GetCategories`);
+  let result = await AxiosGet(ENDPOINT + `/GetCategories`, undefined, false);
   return result?.data ?? [];
 };
+
+export const GetAccountType = async (): Promise<any> => {
+  let result = await AxiosGet(ENDPOINT + `/GetAccountType`, undefined, false);
+  return result?.data ?? [];
+}
