@@ -65,6 +65,7 @@ const SignIn = () => {
       const result = await LoginUser(formData)
       if(result.success){
         const token = result.token;
+        localStorage.setItem("__AUTH_TOKEN__", token);
         const decoded = jwtDecode<DecodedToken>(token);
         setUser({
           userId: decoded.UserId,
