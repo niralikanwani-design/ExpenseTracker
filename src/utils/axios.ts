@@ -11,7 +11,7 @@ const AxiosInstance = axios.create({
 export const AxiosPost = async (
   url: any,
   payload: any = null,
-  needAuth: boolean = false
+  needAuth: boolean = true
 ) => {
   if (needAuth) {
     const authToken = localStorage.getItem("__AUTH_TOKEN__");
@@ -28,7 +28,7 @@ export const AxiosPost = async (
 export const AxiosGet = async (
   url: any,
   params?: any,
-  needAuth: boolean = false
+  needAuth: boolean = true
 ) => {
   if (needAuth) {
     const authToken = localStorage.getItem("__AUTH_TOKEN__");
@@ -53,7 +53,7 @@ export const AxiosGet = async (
 export const AxiosPut = async (
   url: any,
   payload: any = null,
-  needAuth: boolean = false
+  needAuth: boolean = true
 ) => {
   if (needAuth) {
     const authToken = localStorage.getItem("__AUTH_TOKEN__");
@@ -70,7 +70,7 @@ export const AxiosPut = async (
 export const AxiosDelete = async (
   url: any,
   payload: any = null,
-  needAuth: boolean = false
+  needAuth: boolean = true
 ) => {
   if (needAuth) {
     const authToken = localStorage.getItem("__AUTH_TOKEN__");

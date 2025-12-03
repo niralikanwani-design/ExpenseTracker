@@ -4,11 +4,11 @@ import { AxiosPost } from "../utils/axios";
 const ENDPOINT = "api/Auth";
 
 export const LoginUser = async (formData : LoginModel): Promise<any> => {
-    let result = await AxiosPost(ENDPOINT + `/LoginUser`, formData);
+    let result = await AxiosPost(ENDPOINT + `/LoginUser`, formData, false);
     return result.data;
   };
 
   export const RegisterUser = async (formData : RegisterModel): Promise<any> => {
-    let result = await AxiosPost(ENDPOINT + `/RegisterUser`, formData);
+    let result = await AxiosPost(ENDPOINT + `/RegisterUser`, formData, false);
     return result.data;
   };

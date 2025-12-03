@@ -219,7 +219,10 @@ const AddUpdateTransaction: React.FC = () => {
                 id="category"
                 name="category"
                 value={formData.category}
-                onChange={handleChange}
+                onChange={(e) => {
+                  setFormData((prev) => ({ ...prev, category: parseInt(e.target.value) }));  
+                  handleChange(e);
+                }}
                 className={`w-full px-4 py-3 rounded-lg border transition-colors ${
                   errors.category
                     ? "border-red-300 focus:border-red-500 focus:ring-red-200"
