@@ -11,7 +11,8 @@ const AxiosInstance = axios.create({
 export const AxiosPost = async (
   url: any,
   payload: any = null,
-  needAuth: boolean = true
+  needAuth: boolean = true,
+  config: any = {}
 ) => {
   if (needAuth) {
     const authToken = localStorage.getItem("__AUTH_TOKEN__");

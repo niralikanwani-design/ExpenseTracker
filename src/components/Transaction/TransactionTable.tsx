@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { forwardRef, useImperativeHandle, useState } from "react";
 import { Trash2, Edit2, ArrowDown, ArrowUp } from "lucide-react";
 import {
   DataGrid,
@@ -10,13 +10,14 @@ import {
 } from "@mui/x-data-grid";
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { DatePicker } from '@mui/x-date-pickers/DatePicker'; 
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import dayjs, { Dayjs } from 'dayjs';
 import { FilterState, SortState, TransactionFilterPayload } from "../../types";
 import { TextField, Box, Typography, ToggleButtonGroup, ToggleButton } from "@mui/material";
 import { useTransactions } from "../../hooks/useTransactions";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import { exportCSVApi } from "../../dataAccess/transactionDAL";
 
 function CustomNoRowsOverlay() {
   return (
@@ -26,12 +27,17 @@ function CustomNoRowsOverlay() {
   );
 }
 
-const TransactionTable: React.FC = () => {
+export interface TransactionTableHandle {
+  exportCSV: () => Promise<void>;
+}
+
+const TransactionTable = forwardRef<TransactionTableHandle, {}>((props, ref) => {
+
   const [page, setPage] = useState<number>(0);
   const [pageSize, setPageSize] = useState<number>(10);
   const { transactions, loading, getFilteredTransactions, deleteTransaction, totalTransactions } = useTransactions();
   const navigate = useNavigate();
-  
+
   const [sortModel, setSortModel] = useState<SortState>({
     sortByColumn: "transactionDate",
     sortByOrder: "desc"
@@ -46,6 +52,43 @@ const TransactionTable: React.FC = () => {
     amount: undefined,
     type: ""
   });
+
+  const exportCSV = async () => {
+    const payload = {
+      PageNumber: 1,
+      PageSize: 9999999,
+      Type: filters.type,
+      StartDate: filters.startDate,
+      EndDate: filters.endDate,
+      SortbyColumn: sortModel.sortByColumn,
+      SortbyOrder: sortModel.sortByOrder,
+      Filters: { ...filters }
+    };
+
+    try {
+      const res = await exportCSVApi(payload);
+
+      const blob = new Blob([res.data], { type: "text/csv" });
+      const url = window.URL.createObjectURL(blob);
+
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = "Transactions.csv";
+      link.click();
+
+      window.URL.revokeObjectURL(url);
+
+      toast.success("CSV Exported Successfully");
+
+    } catch (err) {
+      console.error(err);
+      toast.error("Failed to export CSV");
+    }
+  };
+
+  useImperativeHandle(ref, () => ({
+    exportCSV
+  }));
 
   const handleDelete = async (id: string) => {
     if (window.confirm("Are you sure you want to delete this expense?")) {
@@ -73,10 +116,10 @@ const TransactionTable: React.FC = () => {
       setFilters((prev) => ({ ...prev, [name]: value }));
     }
 
-    let payload: TransactionFilterPayload   = {
+    let payload: TransactionFilterPayload = {
       PageNumber: page + 1,
       PageSize: pageSize,
-      Type: "Expense",
+      Type: "",
       StartDate: filters.startDate,
       EndDate: filters.endDate,
       SortbyColumn: sortModel.sortByColumn,
@@ -96,7 +139,7 @@ const TransactionTable: React.FC = () => {
     const newFilters = { ...filters, [name]: value ? value.format('YYYY-MM-DD') : "" };
     setFilters(newFilters);
 
-    let payload: TransactionFilterPayload   = {
+    let payload: TransactionFilterPayload = {
       PageNumber: page + 1,
       PageSize: pageSize,
       Type: "Expense",
@@ -139,7 +182,7 @@ const TransactionTable: React.FC = () => {
 
   const handlePageChange = async (newPaginationModel: { page: number; pageSize: number }) => {
     if (newPaginationModel.page !== page) {
-        setPage(newPaginationModel.page);
+      setPage(newPaginationModel.page);
     }
     if (newPaginationModel.pageSize !== pageSize) {
       setPageSize(newPaginationModel.pageSize);
@@ -149,7 +192,7 @@ const TransactionTable: React.FC = () => {
     const payload: TransactionFilterPayload = {
       PageNumber: newPaginationModel.page + 1,
       PageSize: newPaginationModel.pageSize,
-      Type: "Expense",
+      Type: "",
       StartDate: filters.startDate,
       EndDate: filters.endDate,
       SortbyColumn: sortModel.sortByColumn,
@@ -160,10 +203,10 @@ const TransactionTable: React.FC = () => {
   };
 
   const columns: GridColDef[] = [
-    { 
-      field: "title", 
+    {
+      field: "title",
       headerName: "Title",
-      flex: 1, 
+      flex: 1,
       sortable: false,
       renderHeader: (params: GridColumnHeaderParams) => (
         <Box sx={{ width: '100%', my: 1 }}>
@@ -184,13 +227,13 @@ const TransactionTable: React.FC = () => {
         </Box>
       ),
       renderCell: (params: any) => (
-          <div className="font-medium text-gray-900 leading-tight">{params.row.title}</div>
+        <div className="font-medium text-gray-900 leading-tight">{params.row.title}</div>
       ),
     },
-    { 
-      field: "description", 
+    {
+      field: "description",
       headerName: "Description",
-      flex: 1, 
+      flex: 1,
       sortable: false, // Disable default header click sorting
       renderHeader: (params: GridColumnHeaderParams) => (
         <Box sx={{ width: '100%', my: 1 }}>
@@ -211,7 +254,7 @@ const TransactionTable: React.FC = () => {
         </Box>
       ),
       renderCell: (params: any) => (
-          <div className="font-medium text-gray-900 leading-tight">{params.row.description}</div>
+        <div className="font-medium text-gray-900 leading-tight">{params.row.description}</div>
       ),
     },
     {
@@ -259,55 +302,56 @@ const TransactionTable: React.FC = () => {
             </button>
           </Box>
           <Box sx={{ display: 'flex', gap: 2 }}>
-          <LocalizationProvider dateAdapter={AdapterDayjs}>
-            <DatePicker
-              label="Start Date"
-              value={filters.startDate ? dayjs(filters.startDate) : null}
-              onChange={(newValue) => {handleDateChange(newValue, true)}}
-              slotProps={{
-                textField: {
-                  variant: 'standard',
-                  size: 'small',
-                  fullWidth: true,
-                  sx: { 
-                    mb: 1,
-                    '& .MuiInput-input': {
-                      fontSize: '0.8rem'
+            <LocalizationProvider dateAdapter={AdapterDayjs}>
+              <DatePicker
+                label="Start Date"
+                value={filters.startDate ? dayjs(filters.startDate) : null}
+                onChange={(newValue) => { handleDateChange(newValue, true) }}
+                slotProps={{
+                  textField: {
+                    variant: 'standard',
+                    size: 'small',
+                    fullWidth: true,
+                    sx: {
+                      mb: 1,
+                      '& .MuiInput-input': {
+                        fontSize: '0.8rem'
+                      }
+                    },
+                    InputLabelProps: {
+                      sx: {
+                        fontSize: '0.8rem',
+                        "&.MuiInputLabel-shrink": { display: "none" }
+                      },
                     }
                   },
-                  InputLabelProps: {
+                }}
+              />
+              <DatePicker
+                label="End Date"
+                value={filters.endDate ? dayjs(filters.endDate) : null}
+                onChange={(newValue) => handleDateChange(newValue, false)}
+                slotProps={{
+                  textField: {
+                    variant: 'standard',
+                    size: 'small',
+                    fullWidth: true,
                     sx: {
-                      fontSize: '0.8rem',
-                      "&.MuiInputLabel-shrink": { display: "none" }
+                      mb: 1,
+                      '& .MuiInput-input': {
+                        fontSize: '0.8rem'
+                      }
                     },
-                  }
-                },
-              }}
-            />
-            <DatePicker 
-              label="End Date"
-              value={filters.endDate ? dayjs(filters.endDate) : null}
-              onChange={(newValue) => handleDateChange(newValue, false)}
-              slotProps={{ 
-                textField: { 
-                  variant: 'standard', 
-                  size: 'small', 
-                  fullWidth: true, 
-                  sx: { 
-                    mb: 1,
-                    '& .MuiInput-input': {
-                      fontSize: '0.8rem'
+                    InputLabelProps: {
+                      sx: {
+                        fontSize: '0.8rem',
+                        "&.MuiInputLabel-shrink": { display: "none" }
+                      },
                     }
-                  }, 
-                  InputLabelProps: {
-                    sx: {
-                      fontSize: '0.8rem',
-                      "&.MuiInputLabel-shrink": { display: "none" }
-                    },
-                  } } 
-              }}
-            />
-          </LocalizationProvider>
+                  }
+                }}
+              />
+            </LocalizationProvider>
           </Box>
         </Box>
       ),
@@ -448,12 +492,12 @@ const TransactionTable: React.FC = () => {
             },
             '& .MuiDataGrid-columnHeader': {
               height: '100px !important',
-                '&:focus-within': {
-                    outline: 'none',
-                },
-                '&:focus': {
-                    outline: 'none',
-                },
+              '&:focus-within': {
+                outline: 'none',
+              },
+              '&:focus': {
+                outline: 'none',
+              },
             },
             '& .MuiDataGrid-cell': {
               borderBottom: '1px solid #e5e7eb',
@@ -477,18 +521,18 @@ const TransactionTable: React.FC = () => {
               backgroundColor: '#f9fafb',
             },
             '& .MuiDataGrid-columnHeader--alignRight .MuiDataGrid-columnHeaderTitleContainer': {
-                justifyContent: 'flex-end',
-                paddingRight: '16px',
+              justifyContent: 'flex-end',
+              paddingRight: '16px',
             },
             '& .MuiDataGrid-cell--textRight': {
-                justifyContent: 'flex-end',
-                paddingRight: '16px',
+              justifyContent: 'flex-end',
+              paddingRight: '16px',
             }
           }}
         />
       </div>
     </div>
   );
-};
+});
 
 export default TransactionTable;

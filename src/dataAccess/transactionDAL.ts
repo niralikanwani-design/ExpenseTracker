@@ -42,3 +42,9 @@ export const GetAccountType = async (): Promise<any> => {
   let result = await AxiosGet(ENDPOINT + `/GetAccountType`, undefined, false);
   return result?.data ?? [];
 }
+
+export const exportCSVApi = async (payload: any) => {
+  return await AxiosPost(
+    `${ENDPOINT}/ExportCsv`,payload,true,{ responseType: "blob" }
+  );
+};

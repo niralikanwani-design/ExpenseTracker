@@ -1,19 +1,22 @@
 import React, { lazy } from "react";
 import { Plus, Download } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-
-const TransactionTable = lazy(() => import("../components/Transaction/TransactionTable"));
+import TransactionTable, { TransactionTableHandle } from "../components/Transaction/TransactionTable";
 
 const TransactionList: React.FC = () => {
   const navigate = useNavigate();
+  const tableRef = React.useRef<TransactionTableHandle | null>(null);
 
+  const handleExportClick = () => {
+    tableRef.current?.exportCSV(); // this will use current filters/sort from table
+  };
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <h2 className="text-3xl font-bold text-slate-900">Transactions</h2>
         <div className="flex items-center space-x-3">
           <button
-            onClick={() => { }}
+            onClick={handleExportClick}
             className="flex items-center space-x-2 px-4 py-2 text-slate-700 bg-white border border-slate-300 rounded-lg hover:bg-slate-50 transition-colors"
           >
             <Download className="h-4 w-4" />
@@ -35,7 +38,7 @@ const TransactionList: React.FC = () => {
           </button>
         </div>
       </div>
-          <TransactionTable />
+      <TransactionTable ref={tableRef} />
     </div>
   );
 };

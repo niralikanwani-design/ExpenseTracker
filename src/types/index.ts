@@ -174,6 +174,9 @@ export interface DecodedToken {
   expenseCategoriesUsed : number;
   last30DaysTotal : number;
   last30DaysAverage : number;
+  totalIncome : number;
+  totalBalance : number;
+  maxLimit : number;
  }
 
  export interface CategoryData {
@@ -202,4 +205,21 @@ export interface DecodedToken {
 
  export interface GoogleAuthWrapperProps {
   children: ReactNode;
+}
+
+export interface SummaryCardProps {
+  label: string;
+  value: string | number;
+  color?: string;
+}
+
+export interface LimitPayload {
+  userId: number;
+  totalBalance: number;
+  maxLimit: number;
+}
+
+export interface DashboardMessageProps {
+  type: "success" | "warning" | "error" | "info";
+  message: string;
 }
