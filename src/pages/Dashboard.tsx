@@ -19,7 +19,6 @@ import { toast } from "react-toastify";
 const Dashboard: React.FC = () => {
   const navigate = useNavigate();
   const user = useUserStore((state) => state.user);
-  debugger
   user == null ? navigate(`/signIn`) : "";
   const [dashboardData, setDashboardData] = useState<DashboardData>();
   const [categoryData, setCategoryData] = useState<CategoryData[]>([]);
