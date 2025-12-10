@@ -223,3 +223,11 @@ export interface DashboardMessageProps {
   type: "success" | "warning" | "error" | "info";
   message: string;
 }
+
+export interface UserData {
+  userId : number,
+  fullname: string,
+  email: string,
+  totalbalance: number,
+  maxlimit : number
+}

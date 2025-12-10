@@ -1,3 +1,21 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+:root {
+    --datagrid-bg: #ffffff;
+    --datagrid-header-bg: #f9fafb;
+    --datagrid-border: #e5e7eb;
+    --datagrid-text: #111827;
+    --datagrid-text-muted: #6b7280;
+    --datagrid-hover: #f1f5f9;
+  }
+  
+  .dark {
+    --datagrid-bg: #1e293b;
+    --datagrid-header-bg: #0f172a;
+    --datagrid-border: #334155;
+    --datagrid-text: #f1f5f9;
+    --datagrid-text-muted: #cbd5e1;
+    --datagrid-hover: #334155;
+  }

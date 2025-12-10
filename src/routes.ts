@@ -8,6 +8,8 @@ const AuthLayout = lazy(() => import("./components/AuthLayout"));
 const Dashboard  = lazy(() => import("./pages/Dashboard"));
 const TransactionList  =  lazy(() => import("./pages/TransactionList"));
 const AddUpdateTransaction = lazy(() => import("./components/Transaction/AddUpdateTransaction"));
+const EditProfile = lazy(() => import("./pages/EditProfile"));
+const ChangePassword = lazy(() => import("./pages/ChangePassword"));
 
 const router = createBrowserRouter([
   {
@@ -41,7 +43,21 @@ const router = createBrowserRouter([
     children: [
         { index: true, Component: SignIn }
     ]
-  }
+  },
+  {
+    path: "/EditProfile",
+    Component: MainLayout,
+    children: [
+      { path: ":id", Component: EditProfile },
+    ],
+  },  
+  {
+    path: "/ChangePassword",
+    Component: MainLayout,
+    children: [
+      { index: true, Component: ChangePassword },
+    ],
+  },
 ]);
 
 export default router;

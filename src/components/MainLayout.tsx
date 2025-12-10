@@ -1,62 +1,95 @@
-import React from "react";
-import { PiggyBank, BarChart3, List, LogIn, User } from "lucide-react";
+import React, { useEffect, useState } from "react";
+import { PiggyBank, BarChart3, List, LogIn, User, Moon, Sun } from "lucide-react";
 import { useNavigate, Outlet, useLocation } from "react-router-dom";
 import useUserStore from "../store/useUserStore";
 
 const navItems = [
-    { id: "dashboard", label: "Dashboard", icon: BarChart3 },
-    { id: "transactions", label: "Transactions", icon: List },
-    { id: "", label: "Hello", icon: User },
-    { id: "signIn", label: "Log out", icon: LogIn },
-  ];
+  { id: "dashboard", label: "Dashboard", icon: BarChart3 },
+  { id: "transactions", label: "Transactions", icon: List },
+  { id: "editProfile", label: "Hello", icon: User },
+  { id: "signIn", label: "Log out", icon: LogIn },
+];
 
 const MainLayout: React.FC = () => {
   const location = useLocation();
   const navigate = useNavigate();
-
   const user = useUserStore((state) => state.user);
+  const [theme, setTheme] = useState("light");
+
+  useEffect(() => {
+    const savedTheme = localStorage.getItem("theme") || "light";
+    setTheme(savedTheme);
+    document.documentElement.classList.toggle("dark", savedTheme === "dark");
+  }, []);
+
+  const toggleTheme = () => {
+    const newTheme = theme === "light" ? "dark" : "light";
+    setTheme(newTheme);
+    localStorage.setItem("theme", newTheme);
+
+    document.documentElement.classList.toggle("dark", newTheme === "dark");
+  };
 
   const handleLogout = () => {
     useUserStore.getState().logout();
-  }
+    localStorage.setItem("__AUTH_TOKEN__", "");
+  };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-900 dark:to-slate-800">
+
       {/* Header */}
-      <header className="bg-white/80 backdrop-blur-md border-b border-slate-200 sticky top-0 z-50">
+      <header className="bg-white/80 dark:bg-slate-900/80 backdrop-blur-md border-b border-slate-200 dark:border-slate-700 sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
-            <div className="flex items-center space-x-3">
-              <button className="flex items-center space-x-3" onClick={() => {navigate("/Dashboard")}}>
-                <div className="p-2 bg-blue-600 rounded-lg">
-                  <PiggyBank className="h-6 w-6 text-white" />
-                </div>
-                <h1 className="text-xl font-bold text-slate-900">
-                  ExpenseTracker
-                </h1>
-              </button>
-            </div>
 
-            <nav className="hidden md:flex space-x-1">
+            {/* Logo Section */}
+            <button className="flex items-center space-x-3" onClick={() => navigate("/Dashboard")}>
+              <div className="p-2 bg-blue-600 rounded-lg">
+                <PiggyBank className="h-6 w-6 text-white" />
+              </div>
+              <h1 className="text-xl font-bold text-slate-900 dark:text-white">ExpenseTracker</h1>
+            </button>
+
+            {/* Navigation Items */}
+            <nav className="md:flex space-x-1">
               {navItems.map((item) => {
                 const Icon = item.icon;
                 return (
                   <button
                     key={item.id}
                     onClick={() => {
-                      item.label === "Log out" ? handleLogout() : '';
-                      navigate(`/${item.id}`);
+                      if(item.label === "Log out"){
+                        handleLogout();
+                        navigate(`/${item.id}`);
+                      }else if(item.id === "editProfile"){
+                        navigate(`/EditProfile/${user?.userId}`);
+                      }else{
+                        navigate(`/${item.id}`);
+                      }
                     }}
-                    className={`flex items-center space-x-2 px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${location.pathname.includes(`${item.id}`)
-                        ? "bg-blue-100 text-blue-700 shadow-sm"
-                        : "text-slate-600 hover:text-slate-900 hover:bg-slate-100"
+                    className={`flex items-center space-x-2 px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 
+                      ${location.pathname.includes(item.id)
+                        ? "bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-300"
+                        : "text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-700"
                       }`}
                   >
                     <Icon className="h-4 w-4" />
-                    {item.label == "Hello" ? <span>{user && user.fullName ? user.fullName : ""}</span> : <span>{item.label}</span>}
+                    {item.label === "Hello" ? (
+                      <span>{user?.fullName || ""}</span>
+                    ) : (
+                      <span>{item.label}</span>
+                    )}
                   </button>
                 );
               })}
+
+              <button
+                onClick={toggleTheme}
+                className="ml-3 p-2 rounded-lg bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-200 hover:bg-slate-300 dark:hover:bg-slate-600 transition"
+              >
+                {theme === "light" ? <Moon size={20} /> : <Sun size={20} />}
+              </button>
             </nav>
           </div>
         </div>
@@ -85,7 +118,7 @@ const MainLayout: React.FC = () => {
       </nav>
 
       {/* Main Content */}
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 pb-20 md:pb-8">
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 pb-20 md:pb-8 dark:text-white">
         <Outlet />
       </main>
     </div>

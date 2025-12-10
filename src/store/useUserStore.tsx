@@ -2,6 +2,10 @@ import { create } from "zustand";
 import { UserStore } from "../types";
 import { persist } from "zustand/middleware";
 
+const initialState = {
+  user: null,
+};
+
 const useUserStore = create<UserStore>()(
     persist(
       (set) => ({
@@ -9,7 +13,7 @@ const useUserStore = create<UserStore>()(
   
         setUser: (userData) => set({ user: userData }),
   
-        logout: () => set({ user: null })
+        logout: () => set(initialState)
       }),
       {
         name: "user-storage",

@@ -19,6 +19,7 @@ import { toast } from "react-toastify";
 const Dashboard: React.FC = () => {
   const navigate = useNavigate();
   const user = useUserStore((state) => state.user);
+  debugger
   user == null ? navigate(`/signIn`) : "";
   const [dashboardData, setDashboardData] = useState<DashboardData>();
   const [categoryData, setCategoryData] = useState<CategoryData[]>([]);
@@ -30,6 +31,7 @@ const Dashboard: React.FC = () => {
   const [balance, setBalance] = useState<number | string>("");
   const [maxExpenseLimit, setMaxExpenseLimit] = useState<number | string>("");
   const [MaxLimitMessage, setmaxLimitMessage] = useState<{ type: string; text: string } | null>(null);
+  const isDark = document.documentElement.classList.contains("dark");
   const categoryColors: Record<string, string> = {
     Food: "#10B981",
     Transport: "#3B82F6",
@@ -58,22 +60,20 @@ const Dashboard: React.FC = () => {
   ];
 
   useEffect(() => {
-    getDashboardData()
+    getDashboardData();
   }, [selectedMonth]);
 
   const getDashboardData = async () => {
-    try {
-      // const currentMonth = new Date().getMonth() + 1;
-      await dashboardDataAPI("Expense");
-    } catch (error) {
-
-    }
-  }
+    await dashboardDataAPI("Expense");
+  };
 
   const dashboardDataAPI = async (type: string) => {
-    debugger
-    const result = await GetDashboardData(user?.userId ?? 0, selectedMonth, type);
-    
+    const result = await GetDashboardData(
+      user?.userId ?? 0,
+      selectedMonth,
+      type
+    );
+
     setDashboardData(result.summary);
 
     if(result.summary.maxLimit || result.summary.totalBalance){
@@ -147,16 +147,22 @@ const Dashboard: React.FC = () => {
     className?: string;
   }> = ({ title, value, icon, trend, className = "" }) => (
     <div
-      className={`bg-white rounded-xl p-6 shadow-sm border border-slate-200 ${className}`}
+      className={`bg-white dark:bg-slate-900 rounded-xl p-6 shadow-sm 
+      border border-slate-200 dark:border-slate-700 ${className}`}
     >
       <div className="flex items-center justify-between">
         <div>
-          <p className="text-sm font-medium text-slate-600">{title}</p>
-          <p className="text-2xl font-bold text-slate-900 mt-1">{value}</p>
+          <p className="text-sm font-medium text-slate-600 dark:text-slate-300">
+            {title}
+          </p>
+          <p className="text-2xl font-bold text-slate-900 dark:text-white mt-1">
+            {value}
+          </p>
           {trend && (
             <div
-              className={`flex items-center mt-2 text-sm ${trend.isPositive ? "text-green-600" : "text-red-600"
-                }`}
+              className={`flex items-center mt-2 text-sm ${
+                trend.isPositive ? "text-green-600" : "text-red-600"
+              }`}
             >
               {trend.isPositive ? (
                 <TrendingUp className="h-4 w-4 mr-1" />
@@ -167,7 +173,9 @@ const Dashboard: React.FC = () => {
             </div>
           )}
         </div>
-        <div className="p-3 bg-blue-100 rounded-lg">{icon}</div>
+        <div className="p-3 bg-blue-100 dark:bg-blue-900 rounded-lg">
+          {icon}
+        </div>
       </div>
     </div>
   );
@@ -178,10 +186,16 @@ const Dashboard: React.FC = () => {
         sx={{
           borderLeft: `6px solid ${color || "#0ea5e9"}`,
           boxShadow: 1,
+          backgroundColor: "var(--card-bg)",
+          color: "var(--text-color)",
         }}
+        className="dark:bg-slate-900 dark:text-white"
       >
         <CardContent>
-          <Typography variant="subtitle2" color="text.secondary">
+          <Typography
+            variant="subtitle2"
+            className="dark:text-slate-300"
+          >
             {label}
           </Typography>
 
@@ -195,10 +209,10 @@ const Dashboard: React.FC = () => {
 
   const DashboardMessage: React.FC<DashboardMessageProps> = ({ type, message }) => {
     const colors = {
-      success: "bg-green-100 text-green-700 border-green-300",
-      warning: "bg-yellow-100 text-yellow-700 border-yellow-300",
-      error: "bg-red-100 text-red-700 border-red-300",
-      info: "bg-blue-100 text-blue-700 border-blue-300",
+      success: "bg-green-100 dark:bg-green-900 text-green-700 dark:text-green-300 border-green-300 dark:border-green-700",
+      warning: "bg-yellow-100 dark:bg-yellow-900 text-yellow-700 dark:text-yellow-300 border-yellow-300 dark:border-yellow-700",
+      error: "bg-red-100 dark:bg-red-900 text-red-700 dark:text-red-300 border-red-300 dark:border-red-700",
+      info: "bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-300 border-blue-300 dark:border-blue-700",
     };
   
     return (
@@ -212,25 +226,25 @@ const Dashboard: React.FC = () => {
   const handleCloseLimitModal = () => setOpenLimitModal(false);
 
   const handleSaveLimit = async () => {
-
-    console.log("Balance:", balance);
-    console.log("Max Expense Limit:", maxExpenseLimit);
-
     const payload: LimitPayload = {
       userId: Number(user?.userId),
       totalBalance: Number(balance),
-      maxLimit: Number(maxExpenseLimit)
+      maxLimit: Number(maxExpenseLimit),
     };
 
     try {
       const response = await addUserLimit(payload);
-      const radioButtonName = document.querySelector('input[name="type"]:checked') as HTMLInputElement;
-      dashboardDataAPI(radioButtonName ? radioButtonName.value : 'Expense');
+      const radioButtonName = document.querySelector(
+        'input[name="type"]:checked'
+      ) as HTMLInputElement;
+      dashboardDataAPI(
+        radioButtonName ? radioButtonName.value : "Expense"
+      );
+
       if (response.status === 200) {
         toast.success("Limit updated successfully!");
       }
     } catch (error) {
-      console.error("Error saving limit:", error);
       toast.error("Failed to update limit");
     }
 
@@ -239,10 +253,16 @@ const Dashboard: React.FC = () => {
 
   return (
     <div className="space-y-8">
-      {MaxLimitMessage && <DashboardMessage type={MaxLimitMessage.type as any} message={MaxLimitMessage.text} />}
-      <div className="bg-white shadow rounded-xl border p-6">
+      {MaxLimitMessage && (
+        <DashboardMessage
+          type={MaxLimitMessage.type as any}
+          message={MaxLimitMessage.text}
+        />
+      )}
+
+
+      <div className="bg-white dark:bg-slate-900 shadow rounded-xl border border-slate-200 dark:border-slate-700 p-6">
         <div className="grid grid-cols-1 md:grid-cols-6 gap-4 items-center">
-          {/* Add Limit Button */}
           <div className="flex justify-center md:justify-start">
             <button
               onClick={handleAddLimit}
@@ -270,8 +290,11 @@ const Dashboard: React.FC = () => {
         </div>
       </div>
       <div className="flex items-center justify-between">
-        <h2 className="text-3xl font-bold text-slate-900">Dashboard</h2>
-        <div className="flex items-center space-x-3">
+        <h2 className="text-3xl font-bold text-slate-900 dark:text-white">
+          Dashboard
+        </h2>
+
+        <div className="flex items-center space-x-3 dark:text-white">
           <label className="flex items-center space-x-1 cursor-pointer">
             <input
               type="radio"
@@ -299,7 +322,7 @@ const Dashboard: React.FC = () => {
         <div className="flex items-center space-x-2 text-sm text-slate-600">
           <Calendar className="h-4 w-4" />
           <select
-            className="border border-slate-300 rounded-md px-2 py-1 text-sm"
+            className="border border-slate-300 dark:border-slate-700 dark:bg-slate-800 dark:text-white rounded-md px-2 py-1 text-sm"
             value={selectedMonth}
             onChange={(e) => setSelectedMonth(Number(e.target.value))}
           >
@@ -317,30 +340,30 @@ const Dashboard: React.FC = () => {
         <StatCard
           title="Total Expenses"
           value={formatCurrency(dashboardData?.totalExpenses ?? 0)}
-          icon={<DollarSign className="h-6 w-6 text-blue-600" />}
+          icon={<DollarSign className="h-6 w-6 text-blue-600 dark:text-blue-400" />}
         />
         <StatCard
           title="Number of Expenses"
-          value={dashboardData?.numberofExpenses.toString() ?? ''}
-          icon={<Receipt className="h-6 w-6 text-purple-600" />}
+          value={dashboardData?.numberofExpenses.toString() ?? ""}
+          icon={<Receipt className="h-6 w-6 text-purple-600 dark:text-purple-400" />}
         />
         <StatCard
           title="Average Expense"
           value={formatCurrency(dashboardData?.averageExpense ?? 0)}
-          icon={<TrendingUp className="h-6 w-6 text-emerald-600" />}
+          icon={<TrendingUp className="h-6 w-6 text-emerald-600 dark:text-emerald-400" />}
         />
         <StatCard
           title="Expense Categories Used"
-          value={dashboardData?.expenseCategoriesUsed.toString() ?? ''}
-          icon={<TrendingDown className="h-6 w-6 text-orange-600" />}
+          value={dashboardData?.expenseCategoriesUsed.toString() ?? ""}
+          icon={<TrendingDown className="h-6 w-6 text-orange-600 dark:text-orange-400" />}
         />
       </div>
 
       {/* Charts Row */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Category Breakdown */}
-        <div className="bg-white rounded-xl p-6 shadow-sm border border-slate-200">
-          <h3 className="text-lg font-semibold text-slate-900 mb-4">
+        {/* CATEGORY BREAKDOWN */}
+        <div className="bg-white dark:bg-slate-900 rounded-xl p-6 shadow-sm border border-slate-200 dark:border-slate-700">
+          <h3 className="text-lg font-semibold text-slate-900 dark:text-white mb-4">
             Expenses by Category
           </h3>
           <div className="space-y-3 py-4">
@@ -354,20 +377,18 @@ const Dashboard: React.FC = () => {
                   <div className="flex items-center space-x-3">
                     <div
                       className="w-4 h-4 rounded-full"
-                      style={{
-                        backgroundColor: color,
-                      }}
+                      style={{ backgroundColor: color }}
                     />
-                    <span className="text-sm font-medium text-slate-700">
+                    <span className="text-sm font-medium text-slate-700 dark:text-slate-300">
                       {category.categoryName}
                     </span>
                   </div>
 
                   <div className="text-right">
-                    <div className="text-sm font-semibold text-slate-900">
+                    <div className="text-sm font-semibold text-slate-900 dark:text-white">
                       {formatCurrency(category.totalAmount)}
                     </div>
-                    <div className="text-xs text-slate-500">
+                    <div className="text-xs text-slate-500 dark:text-slate-400">
                       {category.percentage?.toFixed(1)}%
                     </div>
                   </div>
@@ -377,16 +398,17 @@ const Dashboard: React.FC = () => {
           </div>
         </div>
 
-        {/* Monthly Trend */}
-        <div className="bg-white rounded-xl p-6 shadow-sm border border-slate-200">
-          <h3 className="text-lg font-semibold text-slate-900 mb-4">
+        {/* MONTHLY TREND */}
+        <div className="bg-white dark:bg-slate-900 rounded-xl p-6 shadow-sm border border-slate-200 dark:border-slate-700">
+          <h3 className="text-lg font-semibold text-slate-900 dark:text-white mb-4">
             Monthly Spending Trend
           </h3>
+
           <div className="h-60">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={monthlyData}>
-                <XAxis dataKey="month" />
-                <YAxis />
+                <XAxis dataKey="month" stroke="currentColor" />
+                <YAxis stroke="currentColor" />
                 <Tooltip />
                 <Bar dataKey="amount" fill="#2563eb" radius={[6, 6, 0, 0]} />
               </BarChart>
@@ -396,76 +418,132 @@ const Dashboard: React.FC = () => {
       </div>
 
       {/* Recent Activity */}
-      <div className="bg-white rounded-xl p-6 shadow-sm border border-slate-200">
-        <h3 className="text-lg font-semibold text-slate-900 mb-4">
+      <div className="bg-white dark:bg-slate-900 rounded-xl p-6 shadow-sm border border-slate-200 dark:border-slate-700">
+        <h3 className="text-lg font-semibold text-slate-900 dark:text-white mb-4">
           Quick Insights
         </h3>
+
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <div className="p-4 bg-blue-50 rounded-lg">
-            <p className="text-sm text-blue-700 font-medium">
+          <div className="p-4 bg-blue-50 dark:bg-blue-900 rounded-lg">
+            <p className="text-sm text-blue-700 dark:text-blue-300 font-medium">
               Highest Category
             </p>
-            <p className="text-lg font-semibold text-blue-900">
+            <p className="text-lg font-semibold text-blue-900 dark:text-blue-100">
               {quickInsight?.highestCategory ?? "N/A"}
             </p>
-            <p className="text-xs text-blue-600">
+            <p className="text-xs text-blue-600 dark:text-blue-400">
               {formatCurrency(quickInsight?.hightestCategoryAmount ?? 0)}
             </p>
           </div>
-          <div className="p-4 bg-emerald-50 rounded-lg">
-            <p className="text-sm text-emerald-700 font-medium">This Month</p>
-            <p className="text-lg font-semibold text-emerald-900">
-              {formatCurrency(
-                quickInsight?.totalAmount || 0
-              )}
+
+          <div className="p-4 bg-emerald-50 dark:bg-emerald-900 rounded-lg">
+            <p className="text-sm text-emerald-700 dark:text-emerald-300 font-medium">
+              This Month
             </p>
-            <p className="text-xs text-emerald-600">
-              {/* {stats.monthlyTrend[stats.monthlyTrend.length - 1]?.month ||
-                "N/A"} */}
+            <p className="text-lg font-semibold text-emerald-900 dark:text-emerald-100">
+              {formatCurrency(quickInsight?.totalAmount || 0)}
             </p>
           </div>
-          <div className="p-4 bg-purple-50 rounded-lg">
-            <p className="text-sm text-purple-700 font-medium">Daily Average</p>
-            <p className="text-lg font-semibold text-purple-900">
+
+          <div className="p-4 bg-purple-50 dark:bg-purple-900 rounded-lg">
+            <p className="text-sm text-purple-700 dark:text-purple-300 font-medium">
+              Daily Average
+            </p>
+            <p className="text-lg font-semibold text-purple-900 dark:text-purple-100">
               {formatCurrency(quickInsight?.dailyAverage || 0)}
             </p>
-            <p className="text-xs text-purple-600">Based on 30 days</p>
+            <p className="text-xs text-purple-600 dark:text-purple-400">
+              Based on 30 days
+            </p>
           </div>
         </div>
       </div>
 
       <Dialog open={openLimitModal} onClose={handleCloseLimitModal} maxWidth="xs" fullWidth>
-        <DialogTitle>Add Limit</DialogTitle>
+        <DialogTitle
+          className="bg-white dark:bg-slate-900"
+          sx={{ color: isDark ? "white" : "black" }}
+        >
+          Add Limit
+        </DialogTitle>
 
-        <DialogContent sx={{ display: "flex", flexDirection: "column", gap: 2, mt: 1 }}>
+        <DialogContent
+          className="bg-white dark:bg-slate-900"
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            gap: 2,
+            color: isDark ? "white" : "black",
+          }}
+        >
+          {/* BALANCE FIELD */}
           <TextField
             label="Balance"
             type="number"
             fullWidth
             value={balance}
             onChange={(e) => setBalance(e.target.value)}
-            sx={{ mt: 2 }}
+            sx={{
+              mt: 2,
+              "& .MuiInputBase-input": {
+                color: isDark ? "white" : "black",
+              },
+              "& .MuiInputLabel-root": {
+                color: isDark ? "#cbd5e1" : "#475569",
+              },
+              "& .MuiOutlinedInput-notchedOutline": {
+                borderColor: isDark ? "#64748b" : "#94a3b8",
+              },
+            }}
           />
 
+          {/* LIMIT FIELD */}
           <TextField
             label="Max Expense Limit"
             type="number"
             fullWidth
             value={maxExpenseLimit}
             onChange={(e) => setMaxExpenseLimit(e.target.value)}
+            sx={{
+              "& .MuiInputBase-input": {
+                color: isDark ? "white" : "black",
+              },
+              "& .MuiInputLabel-root": {
+                color: isDark ? "#cbd5e1" : "#475569",
+              },
+              "& .MuiOutlinedInput-notchedOutline": {
+                borderColor: isDark ? "#64748b" : "#94a3b8",
+              },
+            }}
           />
         </DialogContent>
 
-        <DialogActions sx={{ mb: 1 }}>
-          <Button variant="outlined" onClick={handleCloseLimitModal}>
+        <DialogActions
+          className="bg-white dark:bg-slate-900"
+        >
+          <Button
+            variant="outlined"
+            onClick={handleCloseLimitModal}
+            sx={{
+              borderColor: isDark ? "#e2e8f0" : "#475569",
+              color: isDark ? "#f8fafc" : "#334155",
+              m: 1
+            }}
+          >
             Cancel
           </Button>
 
-          <Button variant="contained" color="primary" onClick={handleSaveLimit}>
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={handleSaveLimit}
+            sx={{ m: 1 }}
+          >
             Save
           </Button>
         </DialogActions>
       </Dialog>
+
     </div>
   );
 };

@@ -13,7 +13,7 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import dayjs, { Dayjs } from 'dayjs';
 import { FilterState, SortState, TransactionFilterPayload } from "../../types";
-import { TextField, Box, Typography, ToggleButtonGroup, ToggleButton } from "@mui/material";
+import { TextField, Box, Typography } from "@mui/material";
 import { useTransactions } from "../../hooks/useTransactions";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
@@ -21,8 +21,14 @@ import { exportCSVApi } from "../../dataAccess/transactionDAL";
 
 function CustomNoRowsOverlay() {
   return (
-    <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%' }}>
-      <Typography>No transactions found</Typography>
+    <Box sx={{
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      height: '100%',
+      color: 'var(--datagrid-text)'
+    }}>
+      <Typography sx={{ color: 'var(--datagrid-text)' }}>No transactions found</Typography>
     </Box>
   );
 }
@@ -212,8 +218,14 @@ const TransactionTable = forwardRef<TransactionTableHandle, {}>((props, ref) => 
         <Box sx={{ width: '100%', my: 1 }}>
           <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
             <Box sx={{ fontWeight: 'bold' }}>{params.colDef.headerName}</Box>
-            <button onClick={() => handleSortModelChange(params.field)} className="p-1 hover:bg-slate-200 rounded absolute right-0">
-              {sortModel.sortByColumn === params.field && sortModel.sortByOrder === 'asc' ? <ArrowUp size={14} /> : <ArrowDown size={14} />}
+            <button
+              onClick={() => handleSortModelChange(params.field)}
+              className="p-1 hover:bg-slate-200 dark:hover:bg-slate-600 rounded absolute right-0"
+            >
+              {sortModel.sortByColumn === params.field && sortModel.sortByOrder === 'asc' ?
+                <ArrowUp size={14} className="text-gray-700 dark:text-gray-300" /> :
+                <ArrowDown size={14} className="text-gray-700 dark:text-gray-300" />
+              }
             </button>
           </Box>
           <TextField
@@ -223,24 +235,41 @@ const TransactionTable = forwardRef<TransactionTableHandle, {}>((props, ref) => 
             variant="standard"
             fullWidth
             size="small"
+            sx={{
+              '& .MuiInput-input': {
+                color: 'var(--datagrid-text)',
+              },
+              '& .MuiInput-root:before': {
+                borderBottomColor: 'var(--datagrid-border)',
+              },
+              '& .MuiInput-root:hover:not(.Mui-disabled):before': {
+                borderBottomColor: 'var(--datagrid-text-muted)',
+              },
+            }}
           />
         </Box>
       ),
       renderCell: (params: any) => (
-        <div className="font-medium text-gray-900 leading-tight">{params.row.title}</div>
+        <div className="font-medium text-gray-900 dark:text-gray-100 leading-tight">{params.row.title}</div>
       ),
     },
     {
       field: "description",
       headerName: "Description",
       flex: 1,
-      sortable: false, // Disable default header click sorting
+      sortable: false,
       renderHeader: (params: GridColumnHeaderParams) => (
         <Box sx={{ width: '100%', my: 1 }}>
           <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
             <Box sx={{ fontWeight: 'bold' }}>{params.colDef.headerName}</Box>
-            <button onClick={() => handleSortModelChange(params.field)} className="p-1 hover:bg-slate-200 rounded absolute right-0">
-              {sortModel.sortByColumn === params.field && sortModel.sortByOrder === 'asc' ? <ArrowUp size={14} /> : <ArrowDown size={14} />}
+            <button
+              onClick={() => handleSortModelChange(params.field)}
+              className="p-1 hover:bg-slate-200 dark:hover:bg-slate-600 rounded absolute right-0"
+            >
+              {sortModel.sortByColumn === params.field && sortModel.sortByOrder === 'asc' ?
+                <ArrowUp size={14} className="text-gray-700 dark:text-gray-300" /> :
+                <ArrowDown size={14} className="text-gray-700 dark:text-gray-300" />
+              }
             </button>
           </Box>
           <TextField
@@ -250,11 +279,22 @@ const TransactionTable = forwardRef<TransactionTableHandle, {}>((props, ref) => 
             variant="standard"
             fullWidth
             size="small"
+            sx={{
+              '& .MuiInput-input': {
+                color: 'var(--datagrid-text)',
+              },
+              '& .MuiInput-root:before': {
+                borderBottomColor: 'var(--datagrid-border)',
+              },
+              '& .MuiInput-root:hover:not(.Mui-disabled):before': {
+                borderBottomColor: 'var(--datagrid-text-muted)',
+              },
+            }}
           />
         </Box>
       ),
       renderCell: (params: any) => (
-        <div className="font-medium text-gray-900 leading-tight">{params.row.description}</div>
+        <div className="font-medium text-gray-900 dark:text-gray-100 leading-tight">{params.row.description}</div>
       ),
     },
     {
@@ -266,8 +306,14 @@ const TransactionTable = forwardRef<TransactionTableHandle, {}>((props, ref) => 
         <Box sx={{ width: '100%', my: 1 }}>
           <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
             <Box sx={{ fontWeight: 'bold' }}>{params.colDef.headerName}</Box>
-            <button onClick={() => handleSortModelChange(params.field)} className="p-1 hover:bg-slate-200 rounded absolute right-0">
-              {sortModel.sortByColumn === params.field && sortModel.sortByOrder === 'asc' ? <ArrowUp size={14} /> : <ArrowDown size={14} />}
+            <button
+              onClick={() => handleSortModelChange(params.field)}
+              className="p-1 hover:bg-slate-200 dark:hover:bg-slate-600 rounded absolute right-0"
+            >
+              {sortModel.sortByColumn === params.field && sortModel.sortByOrder === 'asc' ?
+                <ArrowUp size={14} className="text-gray-700 dark:text-gray-300" /> :
+                <ArrowDown size={14} className="text-gray-700 dark:text-gray-300" />
+              }
             </button>
           </Box>
           <TextField
@@ -277,13 +323,22 @@ const TransactionTable = forwardRef<TransactionTableHandle, {}>((props, ref) => 
             variant="standard"
             fullWidth
             size="small"
+            sx={{
+              '& .MuiInput-input': {
+                color: 'var(--datagrid-text)',
+              },
+              '& .MuiInput-root:before': {
+                borderBottomColor: 'var(--datagrid-border)',
+              },
+              '& .MuiInput-root:hover:not(.Mui-disabled):before': {
+                borderBottomColor: 'var(--datagrid-text-muted)',
+              },
+            }}
           />
         </Box>
       ),
       renderCell: (params: any) => (
-        <span
-          className={`px-3 py-1 text-xs rounded-full `}
-        >
+        <span className="px-3 py-1 text-xs rounded-full text-gray-900 dark:text-gray-100">
           {params.value}
         </span>
       ),
@@ -297,8 +352,14 @@ const TransactionTable = forwardRef<TransactionTableHandle, {}>((props, ref) => 
         <Box sx={{ width: '100%' }}>
           <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
             <Box sx={{ fontWeight: 'bold', lineHeight: '30px' }}>{params.colDef.headerName}</Box>
-            <button onClick={() => handleSortModelChange(params.field)} className="p-1 hover:bg-slate-200 rounded absolute right-0">
-              {sortModel.sortByColumn === params.field && sortModel.sortByOrder === 'asc' ? <ArrowUp size={14} /> : <ArrowDown size={14} />}
+            <button
+              onClick={() => handleSortModelChange(params.field)}
+              className="p-1 hover:bg-slate-200 dark:hover:bg-slate-600 rounded absolute right-0"
+            >
+              {sortModel.sortByColumn === params.field && sortModel.sortByOrder === 'asc' ?
+                <ArrowUp size={14} className="text-gray-700 dark:text-gray-300" /> :
+                <ArrowDown size={14} className="text-gray-700 dark:text-gray-300" />
+              }
             </button>
           </Box>
           <Box sx={{ display: 'flex', gap: 2 }}>
@@ -314,13 +375,38 @@ const TransactionTable = forwardRef<TransactionTableHandle, {}>((props, ref) => 
                     fullWidth: true,
                     sx: {
                       mb: 1,
-                      '& .MuiInput-input': {
-                        fontSize: '0.8rem'
-                      }
+
+                      /* FIX: Date text color */
+                      "& .MuiInputBase-input": {
+                        fontSize: "0.8rem",
+                        color: "var(--datagrid-text) !important",
+                      },
+
+                      /* FIX: Underline color */
+                      "& .MuiInput-underline:before": {
+                        borderBottomColor: "var(--datagrid-border) !important",
+                      },
+                      "& .MuiInput-underline:hover:before": {
+                        borderBottomColor: "var(--datagrid-text-muted) !important",
+                      },
+                      "& .MuiInput-underline:after": {
+                        borderBottomColor: "var(--datagrid-text-muted) !important",
+                      },
+
+                      /* FIX: Calendar icon color */
+                      "& .MuiSvgIcon-root": {
+                        color: "var(--datagrid-text-muted) !important",
+                      },
+
+                      /* FIX: Input wrapper color in dark mode */
+                      "& .MuiInputBase-root": {
+                        color: "var(--datagrid-text) !important",
+                      },
                     },
                     InputLabelProps: {
                       sx: {
                         fontSize: '0.8rem',
+                        color: 'var(--datagrid-text-muted)',
                         "&.MuiInputLabel-shrink": { display: "none" }
                       },
                     }
@@ -338,17 +424,42 @@ const TransactionTable = forwardRef<TransactionTableHandle, {}>((props, ref) => 
                     fullWidth: true,
                     sx: {
                       mb: 1,
-                      '& .MuiInput-input': {
-                        fontSize: '0.8rem'
-                      }
+
+                      /* FIX: Date text color */
+                      "& .MuiInputBase-input": {
+                        fontSize: "0.8rem",
+                        color: "var(--datagrid-text) !important",
+                      },
+
+                      /* FIX: Underline color */
+                      "& .MuiInput-underline:before": {
+                        borderBottomColor: "var(--datagrid-border) !important",
+                      },
+                      "& .MuiInput-underline:hover:before": {
+                        borderBottomColor: "var(--datagrid-text-muted) !important",
+                      },
+                      "& .MuiInput-underline:after": {
+                        borderBottomColor: "var(--datagrid-text-muted) !important",
+                      },
+
+                      /* FIX: Calendar icon color */
+                      "& .MuiSvgIcon-root": {
+                        color: "var(--datagrid-text-muted) !important",
+                      },
+
+                      /* FIX: Input wrapper color in dark mode */
+                      "& .MuiInputBase-root": {
+                        color: "var(--datagrid-text) !important",
+                      },
                     },
                     InputLabelProps: {
                       sx: {
                         fontSize: '0.8rem',
+                        color: 'var(--datagrid-text-muted)',
                         "&.MuiInputLabel-shrink": { display: "none" }
                       },
                     }
-                  }
+                  },
                 }}
               />
             </LocalizationProvider>
@@ -373,25 +484,16 @@ const TransactionTable = forwardRef<TransactionTableHandle, {}>((props, ref) => 
         <Box sx={{ width: '100%' }}>
           <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
             <Box sx={{ fontWeight: 'bold' }}>{params.colDef.headerName}</Box>
-            <button onClick={() => handleSortModelChange(params.field)} className="p-1 hover:bg-slate-200 rounded">
-              {sortModel.sortByColumn === params.field && sortModel.sortByOrder === 'asc' ? <ArrowUp size={14} /> : <ArrowDown size={14} />}
+            <button
+              onClick={() => handleSortModelChange(params.field)}
+              className="p-1 hover:bg-slate-200 dark:hover:bg-slate-600 rounded"
+            >
+              {sortModel.sortByColumn === params.field && sortModel.sortByOrder === 'asc' ?
+                <ArrowUp size={14} className="text-gray-700 dark:text-gray-300" /> :
+                <ArrowDown size={14} className="text-gray-700 dark:text-gray-300" />
+              }
             </button>
           </Box>
-          {/* <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, height: '22px' }}>
-            <ToggleButtonGroup
-              color="primary"
-              value={filters.type}
-              exclusive
-              onChange={(event: React.MouseEvent<HTMLElement>, value: any) => {
-                setFilters((prev) => ({ ...prev, type: value }));
-                handleFilterChange(event as any);
-               }}
-              aria-label="Platform"
-            >
-              <ToggleButton value="Expense" style={{ fontSize: 'unset', fontWeight: '500', padding: '2px' }}>Expenses</ToggleButton>
-              <ToggleButton value="Income">Incomes</ToggleButton>
-            </ToggleButtonGroup>
-          </Box> */}
           <TextField
             name="amount"
             value={filters.amount}
@@ -399,13 +501,24 @@ const TransactionTable = forwardRef<TransactionTableHandle, {}>((props, ref) => 
             variant="standard"
             fullWidth
             size="small"
+            sx={{
+              '& .MuiInput-input': {
+                color: 'var(--datagrid-text)',
+              },
+              '& .MuiInput-root:before': {
+                borderBottomColor: 'var(--datagrid-border)',
+              },
+              '& .MuiInput-root:hover:not(.Mui-disabled):before': {
+                borderBottomColor: 'var(--datagrid-text-muted)',
+              },
+            }}
           />
         </Box>
       ),
       renderCell: (params: any) => {
         const sign = params.row.type === "Income" ? "+" : "-";
         const textColorClass =
-          params.row.type === "Income" ? "text-green-600" : "text-red-600";
+          params.row.type === "Income" ? "text-green-600 dark:text-green-400" : "text-red-600 dark:text-red-400";
         return (
           <span className={`font-medium ${textColorClass}`}>
             <input type="hidden" value={params.row.type} name="type"></input>
@@ -432,14 +545,14 @@ const TransactionTable = forwardRef<TransactionTableHandle, {}>((props, ref) => 
         <div className="flex items-center justify-end space-x-1 h-full py-2 pr-2">
           <button
             onClick={() => handleEdit(params.id as string, params.row.type)}
-            className="text-blue-600 hover:bg-blue-100 p-1.5 rounded-md transition-colors"
+            className="text-blue-600 dark:text-blue-400 hover:bg-blue-100 dark:hover:bg-blue-900/30 p-1.5 rounded-md transition-colors"
             aria-label={`edit-${params.id}`}
           >
             <Edit2 className="w-4 h-4" />
           </button>
           <button
             onClick={() => handleDelete(params.id as string)}
-            className="text-red-600 hover:bg-red-100 p-1.5 rounded-md transition-colors"
+            className="text-red-600 dark:text-red-400 hover:bg-red-100 dark:hover:bg-red-900/30 p-1.5 rounded-md transition-colors"
             aria-label={`delete-${params.id}`}
           >
             <Trash2 className="w-4 h-4" />
@@ -450,7 +563,7 @@ const TransactionTable = forwardRef<TransactionTableHandle, {}>((props, ref) => 
   ];
 
   return (
-    <div className="bg-white rounded-lg shadow-sm border border-slate-200 p-6 mb-6">
+    <div className="bg-white dark:bg-slate-800 rounded-lg shadow-sm border border-slate-200 dark:border-slate-700 p-6 mb-6">
       <div style={{ height: '70vh', width: "100%" }}>
         <DataGrid
           rows={transactions ?? []}
@@ -478,16 +591,21 @@ const TransactionTable = forwardRef<TransactionTableHandle, {}>((props, ref) => 
           }}
           sx={{
             border: 'none',
+            backgroundColor: 'var(--datagrid-bg)',
+            color: 'var(--datagrid-text)',
             '& .MuiDataGrid-columnHeaders': {
-              backgroundColor: '#f9fafb',
-              borderBottom: '1px solid #e5e7eb',
-              color: '#6b7280',
+              backgroundColor: 'var(--datagrid-header-bg)',
+              borderBottom: '1px solid var(--datagrid-border)',
+              color: 'var(--datagrid-text-muted)',
               fontSize: '0.8rem',
               fontWeight: 300,
               minHeight: '100px !important',
               '.MuiDataGrid-columnHeaderTitleContainer': {
                 paddingLeft: '5px',
                 justifyContent: 'flex-start',
+              },
+              '.MuiDataGrid-columnHeaderTitle': {
+                color: 'var(--datagrid-text-muted)',
               },
             },
             '& .MuiDataGrid-columnHeader': {
@@ -500,7 +618,8 @@ const TransactionTable = forwardRef<TransactionTableHandle, {}>((props, ref) => 
               },
             },
             '& .MuiDataGrid-cell': {
-              borderBottom: '1px solid #e5e7eb',
+              borderBottom: '1px solid var(--datagrid-border)',
+              color: 'var(--datagrid-text) !important',
               paddingY: '',
               paddingX: '',
               '&:focus-within': {
@@ -512,13 +631,15 @@ const TransactionTable = forwardRef<TransactionTableHandle, {}>((props, ref) => 
             },
             '& .MuiDataGrid-row': {
               minHeight: '64px !important',
+              color: 'var(--datagrid-text)',
               '&:hover': {
-                backgroundColor: '#f1f5f9',
+                backgroundColor: 'var(--datagrid-hover)',
               },
             },
             '& .MuiDataGrid-footerContainer': {
-              borderTop: '1px solid #e5e7eb',
-              backgroundColor: '#f9fafb',
+              borderTop: '1px solid var(--datagrid-border)',
+              backgroundColor: 'var(--datagrid-header-bg)',
+              color: 'var(--datagrid-text-muted)',
             },
             '& .MuiDataGrid-columnHeader--alignRight .MuiDataGrid-columnHeaderTitleContainer': {
               justifyContent: 'flex-end',
@@ -527,7 +648,25 @@ const TransactionTable = forwardRef<TransactionTableHandle, {}>((props, ref) => 
             '& .MuiDataGrid-cell--textRight': {
               justifyContent: 'flex-end',
               paddingRight: '16px',
-            }
+            },
+            '& .MuiTablePagination-root': {
+              color: 'var(--datagrid-text-muted)',
+            },
+            '& .MuiTablePagination-displayedRows': {
+              color: 'var(--datagrid-text-muted)',
+            },
+            '& .MuiTablePagination-selectLabel': {
+              color: 'var(--datagrid-text-muted)',
+            },
+            '& .MuiSelect-select': {
+              color: 'var(--datagrid-text-muted)',
+            },
+            '& .MuiIconButton-root': {
+              color: 'var(--datagrid-text-muted)',
+            },
+            '& .MuiDataGrid-selectedRowCount': {
+              color: 'var(--datagrid-text-muted)',
+            },
           }}
         />
       </div>
