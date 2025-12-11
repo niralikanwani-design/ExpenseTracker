@@ -4,8 +4,6 @@ import {
   DataGrid,
   GridColDef,
   GridRenderCellParams,
-  GridValueGetterParams,
-  GridValueFormatterParams,
   GridColumnHeaderParams,
 } from "@mui/x-data-grid";
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
@@ -21,14 +19,10 @@ import { exportCSVApi } from "../../dataAccess/transactionDAL";
 
 function CustomNoRowsOverlay() {
   return (
-    <Box sx={{
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      height: '100%',
-      color: 'var(--datagrid-text)'
-    }}>
-      <Typography sx={{ color: 'var(--datagrid-text)' }}>No transactions found</Typography>
+    <Box className="datagrid-norows-wrapper">
+      <Typography className="datagrid-norows-text">
+        No transactions found
+      </Typography>
     </Box>
   );
 }
@@ -215,17 +209,21 @@ const TransactionTable = forwardRef<TransactionTableHandle, {}>((props, ref) => 
       flex: 1,
       sortable: false,
       renderHeader: (params: GridColumnHeaderParams) => (
-        <Box sx={{ width: '100%', my: 1 }}>
-          <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-            <Box sx={{ fontWeight: 'bold' }}>{params.colDef.headerName}</Box>
+        <Box className="customedatagrid-header-wrapper">
+          <Box className="customedatagrid-header-common">
+            <Box className="customedatagrid-header-common-label">
+              {params.colDef.headerName}
+            </Box>
+
             <button
               onClick={() => handleSortModelChange(params.field)}
-              className="p-1 hover:bg-slate-200 dark:hover:bg-slate-600 rounded absolute right-0"
+              className="customedatagrid-header-common-sort-btn"
             >
-              {sortModel.sortByColumn === params.field && sortModel.sortByOrder === 'asc' ?
-                <ArrowUp size={14} className="text-gray-700 dark:text-gray-300" /> :
-                <ArrowDown size={14} className="text-gray-700 dark:text-gray-300" />
-              }
+              {sortModel.sortByColumn === params.field && sortModel.sortByOrder === "asc" ? (
+                <ArrowUp size={14} className="customedatagrid-header-common-sort-icon" />
+              ) : (
+                <ArrowDown size={14} className="customedatagrid-header-common-sort-icon" />
+              )}
             </button>
           </Box>
           <TextField
@@ -235,22 +233,14 @@ const TransactionTable = forwardRef<TransactionTableHandle, {}>((props, ref) => 
             variant="standard"
             fullWidth
             size="small"
-            sx={{
-              '& .MuiInput-input': {
-                color: 'var(--datagrid-text)',
-              },
-              '& .MuiInput-root:before': {
-                borderBottomColor: 'var(--datagrid-border)',
-              },
-              '& .MuiInput-root:hover:not(.Mui-disabled):before': {
-                borderBottomColor: 'var(--datagrid-text-muted)',
-              },
-            }}
+            className="customedatagrid-title-filter"
           />
         </Box>
       ),
       renderCell: (params: any) => (
-        <div className="font-medium text-gray-900 dark:text-gray-100 leading-tight">{params.row.title}</div>
+        <div className="customedatagrid-title-cell">
+          {params.row.title}
+        </div>
       ),
     },
     {
@@ -259,16 +249,19 @@ const TransactionTable = forwardRef<TransactionTableHandle, {}>((props, ref) => 
       flex: 1,
       sortable: false,
       renderHeader: (params: GridColumnHeaderParams) => (
-        <Box sx={{ width: '100%', my: 1 }}>
-          <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-            <Box sx={{ fontWeight: 'bold' }}>{params.colDef.headerName}</Box>
+        <Box className="customedatagrid-description-header">
+          <Box className="customedatagrid-description-header-top">
+            <Box className="customedatagrid-description-label">
+              {params.colDef.headerName}
+            </Box>
+    
             <button
               onClick={() => handleSortModelChange(params.field)}
-              className="p-1 hover:bg-slate-200 dark:hover:bg-slate-600 rounded absolute right-0"
+              className="customedatagrid-description-sort-button"
             >
-              {sortModel.sortByColumn === params.field && sortModel.sortByOrder === 'asc' ?
-                <ArrowUp size={14} className="text-gray-700 dark:text-gray-300" /> :
-                <ArrowDown size={14} className="text-gray-700 dark:text-gray-300" />
+              {sortModel.sortByColumn === params.field && sortModel.sortByOrder === "asc"
+                ? <ArrowUp size={14} className="customedatagrid-description-sort-icon" />
+                : <ArrowDown size={14} className="customedatagrid-description-sort-icon" />
               }
             </button>
           </Box>
@@ -279,41 +272,35 @@ const TransactionTable = forwardRef<TransactionTableHandle, {}>((props, ref) => 
             variant="standard"
             fullWidth
             size="small"
-            sx={{
-              '& .MuiInput-input': {
-                color: 'var(--datagrid-text)',
-              },
-              '& .MuiInput-root:before': {
-                borderBottomColor: 'var(--datagrid-border)',
-              },
-              '& .MuiInput-root:hover:not(.Mui-disabled):before': {
-                borderBottomColor: 'var(--datagrid-text-muted)',
-              },
-            }}
+            className="customedatagrid-description-filter"
           />
         </Box>
       ),
       renderCell: (params: any) => (
-        <div className="font-medium text-gray-900 dark:text-gray-100 leading-tight">{params.row.description}</div>
+        <div className="customedatagrid-description-cell">{params.row.description}</div>
       ),
-    },
+    },    
     {
       field: "categoryName",
       headerName: "Category",
       width: 140,
       sortable: false,
       renderHeader: (params: GridColumnHeaderParams) => (
-        <Box sx={{ width: '100%', my: 1 }}>
-          <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-            <Box sx={{ fontWeight: 'bold' }}>{params.colDef.headerName}</Box>
+        <Box className="customedatagrid-category-header">
+          <Box className="customedatagrid-category-header-top">
+            <Box className="customedatagrid-category-label">
+              {params.colDef.headerName}
+            </Box>
+    
             <button
               onClick={() => handleSortModelChange(params.field)}
-              className="p-1 hover:bg-slate-200 dark:hover:bg-slate-600 rounded absolute right-0"
+              className="customedatagrid-category-sort-button"
             >
-              {sortModel.sortByColumn === params.field && sortModel.sortByOrder === 'asc' ?
-                <ArrowUp size={14} className="text-gray-700 dark:text-gray-300" /> :
-                <ArrowDown size={14} className="text-gray-700 dark:text-gray-300" />
-              }
+              {sortModel.sortByColumn === params.field && sortModel.sortByOrder === "asc" ? (
+                <ArrowUp size={14} className="customedatagrid-category-sort-icon" />
+              ) : (
+                <ArrowDown size={14} className="customedatagrid-category-sort-icon" />
+              )}
             </button>
           </Box>
           <TextField
@@ -323,94 +310,55 @@ const TransactionTable = forwardRef<TransactionTableHandle, {}>((props, ref) => 
             variant="standard"
             fullWidth
             size="small"
-            sx={{
-              '& .MuiInput-input': {
-                color: 'var(--datagrid-text)',
-              },
-              '& .MuiInput-root:before': {
-                borderBottomColor: 'var(--datagrid-border)',
-              },
-              '& .MuiInput-root:hover:not(.Mui-disabled):before': {
-                borderBottomColor: 'var(--datagrid-text-muted)',
-              },
-            }}
+            className="customedatagrid-category-filter"
           />
         </Box>
       ),
       renderCell: (params: any) => (
-        <span className="px-3 py-1 text-xs rounded-full text-gray-900 dark:text-gray-100">
-          {params.value}
-        </span>
+        <span className="customedatagrid-category-cell">{params.value}</span>
       ),
-    },
+    },    
     {
       field: "transactionDate",
       headerName: "Date",
       width: 300,
       sortable: false,
       renderHeader: (params: GridColumnHeaderParams) => (
-        <Box sx={{ width: '100%' }}>
-          <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-            <Box sx={{ fontWeight: 'bold', lineHeight: '30px' }}>{params.colDef.headerName}</Box>
+        <Box className="customedatagrid-date-header">
+    
+          <Box className="customedatagrid-date-header-top">
+            <Box className="customedatagrid-date-label">
+              {params.colDef.headerName}
+            </Box>
+    
             <button
               onClick={() => handleSortModelChange(params.field)}
-              className="p-1 hover:bg-slate-200 dark:hover:bg-slate-600 rounded absolute right-0"
+              className="customedatagrid-date-sort-button"
             >
-              {sortModel.sortByColumn === params.field && sortModel.sortByOrder === 'asc' ?
-                <ArrowUp size={14} className="text-gray-700 dark:text-gray-300" /> :
-                <ArrowDown size={14} className="text-gray-700 dark:text-gray-300" />
-              }
+              {sortModel.sortByColumn === params.field && sortModel.sortByOrder === "asc" ? (
+                <ArrowUp size={14} className="customedatagrid-date-sort-icon" />
+              ) : (
+                <ArrowDown size={14} className="customedatagrid-date-sort-icon" />
+              )}
             </button>
           </Box>
-          <Box sx={{ display: 'flex', gap: 2 }}>
+    
+          <Box className="customedatagrid-date-filter-container">
             <LocalizationProvider dateAdapter={AdapterDayjs}>
               <DatePicker
                 label="Start Date"
                 value={filters.startDate ? dayjs(filters.startDate) : null}
-                onChange={(newValue) => { handleDateChange(newValue, true) }}
+                onChange={(newValue) => handleDateChange(newValue, true)}
                 slotProps={{
                   textField: {
-                    variant: 'standard',
-                    size: 'small',
+                    variant: "standard",
+                    size: "small",
                     fullWidth: true,
-                    sx: {
-                      mb: 1,
-
-                      /* FIX: Date text color */
-                      "& .MuiInputBase-input": {
-                        fontSize: "0.8rem",
-                        color: "var(--datagrid-text) !important",
-                      },
-
-                      /* FIX: Underline color */
-                      "& .MuiInput-underline:before": {
-                        borderBottomColor: "var(--datagrid-border) !important",
-                      },
-                      "& .MuiInput-underline:hover:before": {
-                        borderBottomColor: "var(--datagrid-text-muted) !important",
-                      },
-                      "& .MuiInput-underline:after": {
-                        borderBottomColor: "var(--datagrid-text-muted) !important",
-                      },
-
-                      /* FIX: Calendar icon color */
-                      "& .MuiSvgIcon-root": {
-                        color: "var(--datagrid-text-muted) !important",
-                      },
-
-                      /* FIX: Input wrapper color in dark mode */
-                      "& .MuiInputBase-root": {
-                        color: "var(--datagrid-text) !important",
-                      },
-                    },
+                    className: "customedatagrid-date-filter",
                     InputLabelProps: {
-                      sx: {
-                        fontSize: '0.8rem',
-                        color: 'var(--datagrid-text-muted)',
-                        "&.MuiInputLabel-shrink": { display: "none" }
-                      },
+                      className: "customedatagrid-date-filter-label",
                     }
-                  },
+                  }
                 }}
               />
               <DatePicker
@@ -419,58 +367,26 @@ const TransactionTable = forwardRef<TransactionTableHandle, {}>((props, ref) => 
                 onChange={(newValue) => handleDateChange(newValue, false)}
                 slotProps={{
                   textField: {
-                    variant: 'standard',
-                    size: 'small',
+                    variant: "standard",
+                    size: "small",
                     fullWidth: true,
-                    sx: {
-                      mb: 1,
-
-                      /* FIX: Date text color */
-                      "& .MuiInputBase-input": {
-                        fontSize: "0.8rem",
-                        color: "var(--datagrid-text) !important",
-                      },
-
-                      /* FIX: Underline color */
-                      "& .MuiInput-underline:before": {
-                        borderBottomColor: "var(--datagrid-border) !important",
-                      },
-                      "& .MuiInput-underline:hover:before": {
-                        borderBottomColor: "var(--datagrid-text-muted) !important",
-                      },
-                      "& .MuiInput-underline:after": {
-                        borderBottomColor: "var(--datagrid-text-muted) !important",
-                      },
-
-                      /* FIX: Calendar icon color */
-                      "& .MuiSvgIcon-root": {
-                        color: "var(--datagrid-text-muted) !important",
-                      },
-
-                      /* FIX: Input wrapper color in dark mode */
-                      "& .MuiInputBase-root": {
-                        color: "var(--datagrid-text) !important",
-                      },
-                    },
+                    className: "customedatagrid-date-filter",
                     InputLabelProps: {
-                      sx: {
-                        fontSize: '0.8rem',
-                        color: 'var(--datagrid-text-muted)',
-                        "&.MuiInputLabel-shrink": { display: "none" }
-                      },
+                      className: "customedatagrid-date-filter-label",
                     }
-                  },
+                  }
                 }}
               />
             </LocalizationProvider>
           </Box>
         </Box>
       ),
-      valueGetter: (params: GridValueGetterParams) => new Date(params.value as string),
-      valueFormatter: (params: GridValueFormatterParams) =>
+    
+      valueGetter: (params) => new Date(params.value),
+      valueFormatter: (params) =>
         params.value instanceof Date
           ? params.value.toLocaleDateString("en-GB")
-          : new Date(params.value as string).toLocaleDateString("en-GB"),
+          : new Date(params.value).toLocaleDateString("en-GB"),
     },
     {
       field: "amount",
@@ -481,17 +397,18 @@ const TransactionTable = forwardRef<TransactionTableHandle, {}>((props, ref) => 
       align: "right",
       sortable: false,
       renderHeader: (params: GridColumnHeaderParams) => (
-        <Box sx={{ width: '100%' }}>
-          <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-            <Box sx={{ fontWeight: 'bold' }}>{params.colDef.headerName}</Box>
+        <Box className="customedatagrid-amount-header">
+          <Box className="customedatagrid-amount-header-top">
+            <Box className="customedatagrid-amount-label">
+              {params.colDef.headerName}
+            </Box>
             <button
               onClick={() => handleSortModelChange(params.field)}
-              className="p-1 hover:bg-slate-200 dark:hover:bg-slate-600 rounded"
+              className="customedatagrid-amount-sort-button"
             >
-              {sortModel.sortByColumn === params.field && sortModel.sortByOrder === 'asc' ?
-                <ArrowUp size={14} className="text-gray-700 dark:text-gray-300" /> :
-                <ArrowDown size={14} className="text-gray-700 dark:text-gray-300" />
-              }
+              {sortModel.sortByColumn === params.field && sortModel.sortByOrder === 'asc'
+                ? <ArrowUp size={14} className="customedatagrid-amount-sort-icon" />
+                : <ArrowDown size={14} className="customedatagrid-amount-sort-icon" />}
             </button>
           </Box>
           <TextField
@@ -501,80 +418,74 @@ const TransactionTable = forwardRef<TransactionTableHandle, {}>((props, ref) => 
             variant="standard"
             fullWidth
             size="small"
-            sx={{
-              '& .MuiInput-input': {
-                color: 'var(--datagrid-text)',
-              },
-              '& .MuiInput-root:before': {
-                borderBottomColor: 'var(--datagrid-border)',
-              },
-              '& .MuiInput-root:hover:not(.Mui-disabled):before': {
-                borderBottomColor: 'var(--datagrid-text-muted)',
-              },
-            }}
+            className="customedatagrid-amount-filter"
           />
         </Box>
       ),
       renderCell: (params: any) => {
         const sign = params.row.type === "Income" ? "+" : "-";
         const textColorClass =
-          params.row.type === "Income" ? "text-green-600 dark:text-green-400" : "text-red-600 dark:text-red-400";
+          params.row.type === "Income"
+            ? "text-green-600 dark:text-green-400"
+            : "text-red-600 dark:text-red-400";
+    
         return (
-          <span className={`font-medium ${textColorClass}`}>
-            <input type="hidden" value={params.row.type} name="type"></input>
-            {typeof params.value === 'number'
-              ? `${sign}${(params.value as number).toFixed(2)}`
+          <span className={`font-medium ${textColorClass} customedatagrid-amount-cell`}>
+            <input type="hidden" name="type" value={params.row.type} />
+            {typeof params.value === "number"
+              ? `${sign}${params.value.toFixed(2)}`
               : `${sign}0.00`}
           </span>
         );
       },
-    },
+    },    
     {
       field: "actions",
       headerName: "Actions",
       width: 85,
       sortable: false,
       filterable: false,
-      align: 'right',
+      align: "right",
       renderHeader: (params: GridColumnHeaderParams) => (
-        <Box sx={{ width: '100%', my: 1 }}>
-          <Box sx={{ fontWeight: 'bold', mb: 0.5 }}>{params.colDef.headerName}</Box>
+        <Box className="customedatagrid-actions-header">
+          <Box className="customedatagrid-actions-label">
+            {params.colDef.headerName}
+          </Box>
         </Box>
       ),
       renderCell: (params: GridRenderCellParams<any>) => (
-        <div className="flex items-center justify-end space-x-1 h-full py-2 pr-2">
+        <div className="customedatagrid-actions-cell">
           <button
             onClick={() => handleEdit(params.id as string, params.row.type)}
-            className="text-blue-600 dark:text-blue-400 hover:bg-blue-100 dark:hover:bg-blue-900/30 p-1.5 rounded-md transition-colors"
+            className="customedatagrid-actions-edit-btn"
             aria-label={`edit-${params.id}`}
           >
-            <Edit2 className="w-4 h-4" />
+            <Edit2 className="customedatagrid-actions-icon" />
           </button>
           <button
             onClick={() => handleDelete(params.id as string)}
-            className="text-red-600 dark:text-red-400 hover:bg-red-100 dark:hover:bg-red-900/30 p-1.5 rounded-md transition-colors"
+            className="customedatagrid-actions-delete-btn"
             aria-label={`delete-${params.id}`}
           >
-            <Trash2 className="w-4 h-4" />
+            <Trash2 className="customedatagrid-actions-icon" />
           </button>
         </div>
       ),
-    },
+    }    
   ];
 
   return (
     <div className="bg-white dark:bg-slate-800 rounded-lg shadow-sm border border-slate-200 dark:border-slate-700 p-6 mb-6">
       <div style={{ height: '70vh', width: "100%" }}>
         <DataGrid
+          className="customDataGrid"
           rows={transactions ?? []}
           columns={columns}
           loading={loading}
           getRowId={(row) => row.transactionId}
           rowCount={totalTransactions ?? 0}
           paginationModel={{ page, pageSize }}
-          onPaginationModelChange={(newPaginationModel) => {
-            handlePageChange(newPaginationModel);
-          }}
+          onPaginationModelChange={(newPaginationModel) => handlePageChange(newPaginationModel)}
           pageSizeOptions={[10, 25, 50, 100]}
           pagination
           paginationMode="server"
@@ -582,92 +493,10 @@ const TransactionTable = forwardRef<TransactionTableHandle, {}>((props, ref) => 
           sortingMode="server"
           sortModel={sortModel.sortByColumn ? [{ field: sortModel.sortByColumn, sort: sortModel.sortByOrder as 'asc' | 'desc' }] : []}
           disableColumnMenu
-          disableSelectionOnClick
           disableColumnFilter
           disableColumnSelector
           disableRowSelectionOnClick
-          slots={{
-            noRowsOverlay: CustomNoRowsOverlay,
-          }}
-          sx={{
-            border: 'none',
-            backgroundColor: 'var(--datagrid-bg)',
-            color: 'var(--datagrid-text)',
-            '& .MuiDataGrid-columnHeaders': {
-              backgroundColor: 'var(--datagrid-header-bg)',
-              borderBottom: '1px solid var(--datagrid-border)',
-              color: 'var(--datagrid-text-muted)',
-              fontSize: '0.8rem',
-              fontWeight: 300,
-              minHeight: '100px !important',
-              '.MuiDataGrid-columnHeaderTitleContainer': {
-                paddingLeft: '5px',
-                justifyContent: 'flex-start',
-              },
-              '.MuiDataGrid-columnHeaderTitle': {
-                color: 'var(--datagrid-text-muted)',
-              },
-            },
-            '& .MuiDataGrid-columnHeader': {
-              height: '100px !important',
-              '&:focus-within': {
-                outline: 'none',
-              },
-              '&:focus': {
-                outline: 'none',
-              },
-            },
-            '& .MuiDataGrid-cell': {
-              borderBottom: '1px solid var(--datagrid-border)',
-              color: 'var(--datagrid-text) !important',
-              paddingY: '',
-              paddingX: '',
-              '&:focus-within': {
-                outline: 'none',
-              },
-              '&:focus': {
-                outline: 'none',
-              },
-            },
-            '& .MuiDataGrid-row': {
-              minHeight: '64px !important',
-              color: 'var(--datagrid-text)',
-              '&:hover': {
-                backgroundColor: 'var(--datagrid-hover)',
-              },
-            },
-            '& .MuiDataGrid-footerContainer': {
-              borderTop: '1px solid var(--datagrid-border)',
-              backgroundColor: 'var(--datagrid-header-bg)',
-              color: 'var(--datagrid-text-muted)',
-            },
-            '& .MuiDataGrid-columnHeader--alignRight .MuiDataGrid-columnHeaderTitleContainer': {
-              justifyContent: 'flex-end',
-              paddingRight: '16px',
-            },
-            '& .MuiDataGrid-cell--textRight': {
-              justifyContent: 'flex-end',
-              paddingRight: '16px',
-            },
-            '& .MuiTablePagination-root': {
-              color: 'var(--datagrid-text-muted)',
-            },
-            '& .MuiTablePagination-displayedRows': {
-              color: 'var(--datagrid-text-muted)',
-            },
-            '& .MuiTablePagination-selectLabel': {
-              color: 'var(--datagrid-text-muted)',
-            },
-            '& .MuiSelect-select': {
-              color: 'var(--datagrid-text-muted)',
-            },
-            '& .MuiIconButton-root': {
-              color: 'var(--datagrid-text-muted)',
-            },
-            '& .MuiDataGrid-selectedRowCount': {
-              color: 'var(--datagrid-text-muted)',
-            },
-          }}
+          slots={{ noRowsOverlay: CustomNoRowsOverlay }}
         />
       </div>
     </div>

@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { ChangePasswordAPI, EditUserData, GetUserData } from "../dataAccess/loginDAL";
 import { toast } from "react-toastify";
-import useUserStore from "../store/useUserStore";
 
 const EditProfile = () => {
   const navigate = useNavigate();
@@ -110,7 +109,6 @@ const EditProfile = () => {
 
         <form onSubmit={handleSubmit} className="space-y-6">
 
-          {/* NAME */}
           <div>
             <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
               Name
@@ -128,7 +126,6 @@ const EditProfile = () => {
             {errors.name && <p className="text-red-500 text-sm mt-1">{errors.name}</p>}
           </div>
 
-          {/* EMAIL */}
           <div>
             <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
               Email
@@ -143,7 +140,6 @@ const EditProfile = () => {
             />
           </div>
 
-          {/* TOTAL BALANCE */}
           <div>
             <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
               Total Balance
@@ -159,7 +155,6 @@ const EditProfile = () => {
             />
           </div>
 
-          {/* MAX LIMIT */}
           <div>
             <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
               Max Limit
@@ -175,7 +170,6 @@ const EditProfile = () => {
             />
           </div>
 
-          {/* CHANGE PASSWORD */}
           <div
             className="flex items-center gap-3 p-4 bg-gray-100 dark:bg-slate-800 
             border border-gray-200 dark:border-slate-700 rounded-lg cursor-pointer 
@@ -188,7 +182,6 @@ const EditProfile = () => {
             </span>
           </div>
 
-          {/* BUTTONS */}
           <div className="flex justify-center space-x-3 pt-4">
             <button
               type="submit"
@@ -210,7 +203,6 @@ const EditProfile = () => {
         </form>
       </div>
 
-      {/* 🔥 DARK MODE SUPPORTED MODAL */}
       {showModal && (
         <div className="fixed inset-0 bg-black bg-opacity-40 flex justify-center items-center z-50">
           <div className="bg-white dark:bg-slate-900 w-full max-w-md rounded-lg shadow-lg p-6 border border-slate-200 dark:border-slate-700">

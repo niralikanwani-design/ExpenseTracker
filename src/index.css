@@ -19,3 +19,565 @@
     --datagrid-text-muted: #cbd5e1;
     --datagrid-hover: #334155;
   }
+
+  .customDataGrid {
+    border: none !important;
+    background-color: var(--datagrid-bg);
+    color: var(--datagrid-text);
+  }
+  
+  .customDataGrid .MuiDataGrid-columnHeaders {
+    background-color: var(--datagrid-header-bg);
+    border-bottom: 1px solid var(--datagrid-border);
+    color: var(--datagrid-text-muted);
+    font-size: 0.8rem;
+    font-weight: 300;
+    min-height: 100px !important;
+  }
+  
+  .customDataGrid .MuiDataGrid-columnHeaderTitleContainer {
+    padding-left: 5px;
+    justify-content: flex-start;
+  }
+  
+  .customDataGrid .MuiDataGrid-columnHeaderTitle {
+    color: var(--datagrid-text-muted);
+  }
+  
+  .customDataGrid .MuiDataGrid-columnHeader {
+    height: 100px !important;
+  }
+  
+  .customDataGrid .MuiDataGrid-columnHeader:focus,
+  .customDataGrid .MuiDataGrid-columnHeader:focus-within {
+    outline: none !important;
+  }
+  
+  .customDataGrid .MuiDataGrid-cell {
+    border-bottom: 1px solid var(--datagrid-border);
+    color: var(--datagrid-text) !important;
+  }
+  
+  .customDataGrid .MuiDataGrid-cell:focus,
+  .customDataGrid .MuiDataGrid-cell:focus-within {
+    outline: none !important;
+  }
+  
+  .customDataGrid .MuiDataGrid-row {
+    min-height: 64px !important;
+    color: var(--datagrid-text);
+  }
+  
+  .customDataGrid .MuiDataGrid-row:hover {
+    background-color: var(--datagrid-hover);
+  }
+  
+  .customDataGrid .MuiDataGrid-footerContainer {
+    border-top: 1px solid var(--datagrid-border);
+    background-color: var(--datagrid-header-bg);
+    color: var(--datagrid-text-muted);
+  }
+  
+  .customDataGrid .MuiTablePagination-root,
+  .customDataGrid .MuiTablePagination-displayedRows,
+  .customDataGrid .MuiTablePagination-selectLabel,
+  .customDataGrid .MuiSelect-select,
+  .customDataGrid .MuiIconButton-root,
+  .customDataGrid .MuiDataGrid-selectedRowCount {
+    color: var(--datagrid-text-muted);
+  }
+  
+  .customDataGrid .MuiDataGrid-columnHeader--alignRight .MuiDataGrid-columnHeaderTitleContainer {
+    justify-content: flex-end;
+    padding-right: 16px;
+  }
+  
+  .customDataGrid .MuiDataGrid-cell--textRight {
+    justify-content: flex-end;
+    padding-right: 16px;
+  }  
+
+  .customedatagrid-title-header {
+    width: 100%;
+    margin-top: 8px;
+    margin-bottom: 8px;
+  }
+
+  .customedatagrid-title-header-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: relative;
+  }
+    
+  .customedatagrid-title-label {
+    font-weight: bold;
+    color: var(--datagrid-text-muted);
+  }
+
+  .customedatagrid-title-sort-button {
+    padding: 4px;
+    border: none;
+    background: transparent;
+    border-radius: 4px;
+    cursor: pointer;
+    position: absolute;
+    right: 0;
+  }
+  
+  .customedatagrid-title-sort-button:hover {
+    background-color: var(--datagrid-hover);
+  }
+
+  .customedatagrid-title-sort-icon {
+    color: var(--datagrid-text-muted);
+  }
+
+  .customedatagrid-title-filter .MuiInput-input {
+    color: var(--datagrid-text);
+  }
+  
+  .customedatagrid-title-filter .MuiInput-root:before {
+    border-bottom-color: var(--datagrid-border);
+  }
+  
+  .customedatagrid-title-filter .MuiInput-root:hover:not(.Mui-disabled):before {
+    border-bottom-color: var(--datagrid-text-muted);
+  }
+
+  .customedatagrid-title-cell {
+    font-weight: 500;
+    color: var(--datagrid-text);
+  }
+    
+  .customedatagrid-description-header {
+    width: 100%;
+    margin-top: 8px;
+    margin-bottom: 8px;
+  }
+
+  .customedatagrid-description-header-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: relative;
+  }
+
+  .customedatagrid-description-label {
+    font-weight: bold;
+    color: var(--datagrid-text-muted);
+  }
+
+  .customedatagrid-description-sort-button {
+    padding: 4px;
+    border: none;
+    background: transparent;
+    border-radius: 4px;
+    cursor: pointer;
+    position: absolute;
+    right: 0;
+  }
+  
+  .customedatagrid-description-sort-button:hover {
+    background-color: var(--datagrid-hover);
+  }
+
+  .customedatagrid-description-sort-icon {
+    color: var(--datagrid-text-muted);
+  }
+
+  .customedatagrid-description-filter .MuiInput-input {
+    color: var(--datagrid-text);
+  }
+  
+  .customedatagrid-description-filter .MuiInput-root:before {
+    border-bottom-color: var(--datagrid-border);
+  }
+  
+  .customedatagrid-description-filter .MuiInput-root:hover:not(.Mui-disabled):before {
+    border-bottom-color: var(--datagrid-text-muted);
+  }
+
+  .customedatagrid-description-cell {
+    font-weight: 500;
+    color: var(--datagrid-text);
+    line-height: 1.3;
+  }
+  
+  .customedatagrid-category-header {
+    width: 100%;
+    margin-top: 8px;
+    margin-bottom: 8px;
+  }
+
+  .customedatagrid-category-header-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: relative;
+  }
+
+  .customedatagrid-category-label {
+    font-weight: bold;
+    color: var(--datagrid-text-muted);
+  }
+
+  .customedatagrid-category-sort-button {
+    padding: 4px;
+    border: none;
+    background: transparent;
+    border-radius: 4px;
+    cursor: pointer;
+    position: absolute;
+    right: 0;
+  }
+  
+  .customedatagrid-category-sort-button:hover {
+    background-color: var(--datagrid-hover);
+  }
+
+  .customedatagrid-category-sort-icon {
+    color: var(--datagrid-text-muted);
+  }
+
+  .customedatagrid-category-filter .MuiInput-input {
+    color: var(--datagrid-text);
+  }
+  
+  .customedatagrid-category-filter .MuiInput-root:before {
+    border-bottom-color: var(--datagrid-border);
+  }
+  
+  .customedatagrid-category-filter .MuiInput-root:hover:not(.Mui-disabled):before {
+    border-bottom-color: var(--datagrid-text-muted);
+  }
+
+  .customedatagrid-category-cell {
+    padding: 4px 12px;
+    font-size: 0.75rem;
+    border-radius: 9999px;
+    color: var(--datagrid-text);
+    background-color: var(--datagrid-hover);
+    display: inline-block;
+    font-weight: 500;
+  }
+
+  .customedatagrid-date-header {
+    width: 100%;
+    margin-top: 4px;
+  }
+
+  .customedatagrid-date-header-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: relative;
+  }
+
+  .customedatagrid-date-label {
+    font-weight: bold;
+    line-height: 30px;
+    color: var(--datagrid-text-muted);
+  }
+
+  .customedatagrid-date-sort-button {
+    padding: 4px;
+    background: transparent;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    position: absolute;
+    right: 0;
+  }
+  
+  .customedatagrid-date-sort-button:hover {
+    background-color: var(--datagrid-hover);
+  }
+
+  .customedatagrid-date-sort-icon {
+    color: var(--datagrid-text-muted);
+  }
+
+  .customedatagrid-date-filter-container {
+    display: flex;
+    gap: 16px;
+    margin-top: 4px;
+  }
+
+  .customedatagrid-date-filter .MuiInputBase-input {
+    font-size: 0.8rem;
+    color: var(--datagrid-text) !important;
+  }
+
+  .customedatagrid-date-filter .MuiInput-underline:before {
+    border-bottom-color: var(--datagrid-border) !important;
+  }
+  
+  .customedatagrid-date-filter .MuiInput-underline:hover:before {
+    border-bottom-color: var(--datagrid-text-muted) !important;
+  }
+  
+  .customedatagrid-date-filter .MuiInput-underline:after {
+    border-bottom-color: var(--datagrid-text-muted) !important;
+  }
+
+  .customedatagrid-date-filter .MuiSvgIcon-root {
+    color: var(--datagrid-text-muted) !important;
+  }
+
+  .customedatagrid-date-filter .MuiInputBase-root {
+    color: var(--datagrid-text) !important;
+  }
+
+  .customedatagrid-date-filter-label {
+    font-size: 0.8rem !important;
+    color: var(--datagrid-text-muted) !important;
+  }
+  
+  .customedatagrid-date-filter-label.MuiInputLabel-shrink {
+    display: none !important;
+  }
+
+  .customedatagrid-amount-header {
+    width: 100%;
+    margin-top: 6px;
+  }
+  
+  .customedatagrid-amount-header-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: relative;
+  }
+  
+  .customedatagrid-amount-label {
+    font-weight: bold;
+    color: var(--datagrid-text-muted);
+    text-align: right;
+    width: 100%;
+  }
+  
+  .customedatagrid-amount-sort-button {
+    padding: 4px;
+    border: none;
+    background: transparent;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  .customedatagrid-amount-sort-button:hover {
+    background-color: var(--datagrid-hover);
+  }
+  
+  .customedatagrid-amount-sort-icon {
+    color: var(--datagrid-text-muted);
+  }
+  
+  .customedatagrid-amount-filter .MuiInput-input {
+    color: var(--datagrid-text) !important;
+    text-align: right;
+  }
+  
+  .customedatagrid-amount-filter .MuiInput-root:before {
+    border-bottom-color: var(--datagrid-border) !important;
+  }
+  
+  .customedatagrid-amount-filter .MuiInput-root:hover:not(.Mui-disabled):before {
+    border-bottom-color: var(--datagrid-text-muted) !important;
+  }
+  
+  .customedatagrid-amount-cell {
+    display: inline-block;
+    width: 100%;
+    text-align: right;
+  }
+
+  .customedatagrid-actions-header {
+    width: 100%;
+    margin-top: 6px;
+    margin-bottom: 6px;
+  }
+  
+  .customedatagrid-actions-label {
+    font-weight: bold;
+    color: var(--datagrid-text-muted);
+    text-align: right;
+    width: 100%;
+  }
+  
+  .customedatagrid-actions-cell {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 4px;
+    padding-right: 4px;
+    height: 100%;
+  }
+  
+  .customedatagrid-actions-edit-btn {
+    padding: 6px;
+    border: none;
+    border-radius: 6px;
+    background: transparent;
+    cursor: pointer;
+    color: #2563eb;
+  }
+  
+  .customedatagrid-actions-edit-btn:hover {
+    background-color: rgba(59, 130, 246, 0.15);
+  }
+  
+  .dark .customedatagrid-actions-edit-btn {
+    color: #60a5fa;
+  }
+  
+  .dark .customedatagrid-actions-edit-btn:hover {
+    background-color: rgba(30, 58, 138, 0.3);
+  }
+  
+  .customedatagrid-actions-delete-btn {
+    padding: 6px;
+    border: none;
+    border-radius: 6px;
+    background: transparent;
+    cursor: pointer;
+    color: #dc2626; 
+  }
+  
+  .customedatagrid-actions-delete-btn:hover {
+    background-color: rgba(239, 68, 68, 0.15);
+  }
+  
+  .dark .customedatagrid-actions-delete-btn {
+    color: #f87171;
+  }
+  
+  .dark .customedatagrid-actions-delete-btn:hover {
+    background-color: rgba(127, 29, 29, 0.3); 
+  }
+  
+  .customedatagrid-actions-icon {
+    width: 16px;
+    height: 16px;
+  }
+
+  .limitmodal-title {
+    background-color: white;
+    color: black;
+    font-weight: 600;
+  }
+  
+  .dark .limitmodal-title {
+    background-color: #0f172a;     
+    color: white;
+  }
+  
+  .limitmodal-content {
+    background-color: white;
+    color: black;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+  
+  .dark .limitmodal-content {
+    background-color: #0f172a;   
+    color: white;
+  }
+  
+  .limitmodal-input .MuiInputBase-input {
+    color: black !important;
+  }
+  
+  .dark .limitmodal-input .MuiInputBase-input {
+    color: white !important;
+  }
+  
+  .limitmodal-input .MuiInputLabel-root {
+    color: #475569 !important;     
+  }
+  
+  .dark .limitmodal-input .MuiInputLabel-root {
+    color: #cbd5e1 !important;     
+  }
+  
+  .limitmodal-input .MuiOutlinedInput-notchedOutline {
+    border-color: #94a3b8 !important; 
+  }
+  
+  .dark .limitmodal-input .MuiOutlinedInput-notchedOutline {
+    border-color: #64748b !important;
+  }
+  
+  .limitmodal-actions {
+    background-color: white;
+    padding: 16px;
+  }
+  
+  .dark .limitmodal-actions {
+    background-color: #0f172a;      
+  }
+  
+  .limitmodal-cancel-btn {
+    border-color: #475569 !important;  
+    color: #334155 !important;          
+  }
+  
+  .dark .limitmodal-cancel-btn {
+    border-color: #e2e8f0 !important; 
+    color: #f8fafc !important;        
+  }
+  
+  .limitmodal-save-btn {
+    margin: 4px !important;
+  }  
+
+  .datagrid-norows-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    color: var(--datagrid-text);
+  }
+  
+  .datagrid-norows-text {
+    color: var(--datagrid-text);
+    font-size: 0.95rem;
+    opacity: 0.9;
+  }
+
+  .customedatagrid-header-common {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: relative;
+  }
+  
+  .customedatagrid-header-common-label {
+    font-weight: bold;
+    color: var(--datagrid-text-muted);
+  }
+  
+  .customedatagrid-header-common-sort-btn {
+    padding: 4px;
+    border: none;
+    background: transparent;
+    border-radius: 4px;
+    cursor: pointer;
+    position: absolute;
+    right: 0;
+  }
+  
+  .customedatagrid-header-common-sort-btn:hover {
+    background-color: var(--datagrid-hover);
+  }
+  
+  .customedatagrid-header-common-sort-icon {
+    color: var(--datagrid-text-muted);
+  }
+
+  .customedatagrid-header-wrapper {
+    width: 100%;
+    margin-top: 4px;
+    margin-bottom: 4px;
+  }

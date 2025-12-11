@@ -30,7 +30,8 @@ const Dashboard: React.FC = () => {
   const [balance, setBalance] = useState<number | string>("");
   const [maxExpenseLimit, setMaxExpenseLimit] = useState<number | string>("");
   const [MaxLimitMessage, setmaxLimitMessage] = useState<{ type: string; text: string } | null>(null);
-  const isDark = document.documentElement.classList.contains("dark");
+  const [isCurrentMonth,setIsCurrentMonth] = useState(false);
+  // const isDark = document.documentElement.classList.contains("dark");
   const categoryColors: Record<string, string> = {
     Food: "#10B981",
     Transport: "#3B82F6",
@@ -60,6 +61,8 @@ const Dashboard: React.FC = () => {
 
   useEffect(() => {
     getDashboardData();
+    const currentMonth = new Date().getMonth() + 1;
+    setIsCurrentMonth(selectedMonth === currentMonth);
   }, [selectedMonth]);
 
   const getDashboardData = async () => {
@@ -250,6 +253,10 @@ const Dashboard: React.FC = () => {
     setOpenLimitModal(false);
   };
 
+  const handleDropdownChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setSelectedMonth(Number(e.target.value));
+  };  
+
   return (
     <div className="space-y-8">
       {MaxLimitMessage && (
@@ -259,8 +266,7 @@ const Dashboard: React.FC = () => {
         />
       )}
 
-
-      <div className="bg-white dark:bg-slate-900 shadow rounded-xl border border-slate-200 dark:border-slate-700 p-6">
+      {isCurrentMonth && <div className="bg-white dark:bg-slate-900 shadow rounded-xl border border-slate-200 dark:border-slate-700 p-6">
         <div className="grid grid-cols-1 md:grid-cols-6 gap-4 items-center">
           <div className="flex justify-center md:justify-start">
             <button
@@ -287,7 +293,7 @@ const Dashboard: React.FC = () => {
           <SummaryCard label="Net balance" value={formatCurrency((dashboardData?.totalBalance ?? 0) - (dashboardData?.totalExpenses ?? 0))} color="#f97316" />
 
         </div>
-      </div>
+      </div>}
       <div className="flex items-center justify-between">
         <h2 className="text-3xl font-bold text-slate-900 dark:text-white">
           Dashboard
@@ -323,7 +329,7 @@ const Dashboard: React.FC = () => {
           <select
             className="border border-slate-300 dark:border-slate-700 dark:bg-slate-800 dark:text-white rounded-md px-2 py-1 text-sm"
             value={selectedMonth}
-            onChange={(e) => setSelectedMonth(Number(e.target.value))}
+            onChange={handleDropdownChange}
           >
             {months.map((m) => (
               <option key={m.value} value={m.value}>
@@ -459,22 +465,15 @@ const Dashboard: React.FC = () => {
       </div>
 
       <Dialog open={openLimitModal} onClose={handleCloseLimitModal} maxWidth="xs" fullWidth>
-        <DialogTitle
-          className="bg-white dark:bg-slate-900"
-          sx={{ color: isDark ? "white" : "black" }}
-        >
+
+        {/* TITLE */}
+        <DialogTitle className="limitmodal-title">
           Add Limit
         </DialogTitle>
 
-        <DialogContent
-          className="bg-white dark:bg-slate-900"
-          sx={{
-            display: "flex",
-            flexDirection: "column",
-            gap: 2,
-            color: isDark ? "white" : "black",
-          }}
-        >
+        {/* CONTENT */}
+        <DialogContent className="limitmodal-content">
+
           {/* BALANCE FIELD */}
           <TextField
             label="Balance"
@@ -482,18 +481,7 @@ const Dashboard: React.FC = () => {
             fullWidth
             value={balance}
             onChange={(e) => setBalance(e.target.value)}
-            sx={{
-              mt: 2,
-              "& .MuiInputBase-input": {
-                color: isDark ? "white" : "black",
-              },
-              "& .MuiInputLabel-root": {
-                color: isDark ? "#cbd5e1" : "#475569",
-              },
-              "& .MuiOutlinedInput-notchedOutline": {
-                borderColor: isDark ? "#64748b" : "#94a3b8",
-              },
-            }}
+            className="limitmodal-input"
           />
 
           {/* LIMIT FIELD */}
@@ -503,41 +491,17 @@ const Dashboard: React.FC = () => {
             fullWidth
             value={maxExpenseLimit}
             onChange={(e) => setMaxExpenseLimit(e.target.value)}
-            sx={{
-              "& .MuiInputBase-input": {
-                color: isDark ? "white" : "black",
-              },
-              "& .MuiInputLabel-root": {
-                color: isDark ? "#cbd5e1" : "#475569",
-              },
-              "& .MuiOutlinedInput-notchedOutline": {
-                borderColor: isDark ? "#64748b" : "#94a3b8",
-              },
-            }}
+            className="limitmodal-input"
           />
         </DialogContent>
 
-        <DialogActions
-          className="bg-white dark:bg-slate-900"
-        >
-          <Button
-            variant="outlined"
-            onClick={handleCloseLimitModal}
-            sx={{
-              borderColor: isDark ? "#e2e8f0" : "#475569",
-              color: isDark ? "#f8fafc" : "#334155",
-              m: 1
-            }}
-          >
+        {/* ACTIONS */}
+        <DialogActions className="limitmodal-actions">
+          <Button variant="outlined" onClick={handleCloseLimitModal} className="limitmodal-cancel-btn">
             Cancel
           </Button>
 
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={handleSaveLimit}
-            sx={{ m: 1 }}
-          >
+          <Button variant="contained" color="primary" onClick={handleSaveLimit} className="limitmodal-save-btn">
             Save
           </Button>
         </DialogActions>

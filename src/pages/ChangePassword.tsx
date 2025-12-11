@@ -7,7 +7,7 @@ import useUserStore from "../store/useUserStore";
 const ChangePassword = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  // read email from URL query string
+  
   const params = new URLSearchParams(location.search);
   const email = params.get("email") ?? "";
   const [password, setPassword] = useState("");
@@ -36,10 +36,10 @@ const ChangePassword = () => {
 
     setError("");
     setIsSubmitting(true);
-    
+
     try {
-      const result = await SetPassword(email,password);
-      if(result){
+      const result = await SetPassword(email, password);
+      if (result) {
         toast.success("Password changed successfully!");
         navigate(`/EditProfile/${user?.userId}`);
       }
@@ -52,15 +52,15 @@ const ChangePassword = () => {
 
   return (
     <div className="max-w-2xl mx-auto">
-      <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
-        <h2 className="text-2xl font-bold text-slate-900 mb-6">
+      <div className="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 p-6">
+        <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-6">
           Set New Password
         </h2>
 
         <form onSubmit={handleSubmit} className="space-y-6">
 
           <div>
-            <label className="block text-sm font-medium text-slate-700 mb-2">
+            <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
               New Password
             </label>
 
@@ -72,20 +72,31 @@ const ChangePassword = () => {
                 setPassword(e.target.value);
                 setError("");
               }}
-              className={`w-full px-4 py-3 rounded-lg border ${
-                error ? "border-red-500" : "border-slate-300"
-              } focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none`}
+              className={`w-full px-4 py-3 rounded-lg border bg-white dark:bg-slate-700 text-slate-900 dark:text-white transition-colors outline-none 
+                ${
+                  error
+                    ? "border-red-500 dark:border-red-400"
+                    : "border-slate-300 dark:border-slate-600 focus:border-blue-500 dark:focus:border-blue-400"
+                }
+                focus:ring-2 focus:ring-blue-200 dark:focus:ring-blue-900/40
+              `}
               placeholder="Enter new password"
             />
 
-            {error && <p className="text-red-500 text-sm mt-1">{error}</p>}
+            {error && (
+              <p className="text-red-500 dark:text-red-400 text-sm mt-1">
+                {error}
+              </p>
+            )}
           </div>
 
           <div className="flex justify-center pt-4">
             <button
               type="submit"
               disabled={isSubmitting}
-              className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50"
+              className="px-6 py-3 bg-blue-600 dark:bg-blue-500 text-white rounded-lg 
+                hover:bg-blue-700 dark:hover:bg-blue-600 
+                disabled:opacity-50 disabled:cursor-not-allowed transition-colors font-medium"
             >
               {isSubmitting ? "Saving..." : "Submit"}
             </button>
