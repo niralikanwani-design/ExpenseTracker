@@ -1,4 +1,4 @@
-import React, { lazy } from "react";
+import React from "react";
 import { Plus, Download } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import TransactionTable, { TransactionTableHandle } from "../components/Transaction/TransactionTable";
